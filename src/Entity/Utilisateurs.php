@@ -42,12 +42,36 @@ class Utilisateurs
     #[ORM\OneToMany(targetEntity: Commentaires::class, mappedBy: 'idUtilisateur')]
     private Collection $commentaires;
 
+    #[ORM\OneToMany(targetEntity: Amis::class, mappedBy: 'idUtilisateur')]
+    private Collection $utilisateur;
+
+    #[ORM\OneToMany(targetEntity: Amis::class, mappedBy: 'idUtilisateurAmi')]
+    private Collection $ami;
+
+    #[ORM\OneToMany(targetEntity: Partage::class, mappedBy: 'idUtilisateur')]
+    private Collection $partages;
+
+    #[ORM\OneToMany(targetEntity: Enregistrer::class, mappedBy: 'idUtilisateur')]
+    private Collection $enregistrers;
+
+    #[ORM\OneToMany(targetEntity: Participer::class, mappedBy: 'idUtilisateur')]
+    private Collection $participers;
+
+    #[ORM\OneToMany(targetEntity: GroupesUtilisateurs::class, mappedBy: 'idUtilisateur')]
+    private Collection $groupesUtilisateurs;
+
     public function __construct()
     {
         $this->ressources = new ArrayCollection();
         $this->groupes = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
+        $this->utilisateur = new ArrayCollection();
+        $this->ami = new ArrayCollection();
+        $this->partages = new ArrayCollection();
+        $this->enregistrers = new ArrayCollection();
+        $this->participers = new ArrayCollection();
+        $this->groupesUtilisateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -229,6 +253,186 @@ class Utilisateurs
             // set the owning side to null (unless already changed)
             if ($commentaire->getIdUtilisateur() === $this) {
                 $commentaire->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Amis>
+     */
+    public function getUtilisateur(): Collection
+    {
+        return $this->utilisateur;
+    }
+
+    public function addUtilisateur(Amis $utilisateur): static
+    {
+        if (!$this->utilisateur->contains($utilisateur)) {
+            $this->utilisateur->add($utilisateur);
+            $utilisateur->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Amis $utilisateur): static
+    {
+        if ($this->utilisateur->removeElement($utilisateur)) {
+            // set the owning side to null (unless already changed)
+            if ($utilisateur->getIdUtilisateur() === $this) {
+                $utilisateur->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Amis>
+     */
+    public function getAmi(): Collection
+    {
+        return $this->ami;
+    }
+
+    public function addAmi(Amis $ami): static
+    {
+        if (!$this->ami->contains($ami)) {
+            $this->ami->add($ami);
+            $ami->setIdUtilisateurAmi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAmi(Amis $ami): static
+    {
+        if ($this->ami->removeElement($ami)) {
+            // set the owning side to null (unless already changed)
+            if ($ami->getIdUtilisateurAmi() === $this) {
+                $ami->setIdUtilisateurAmi(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Partage>
+     */
+    public function getPartages(): Collection
+    {
+        return $this->partages;
+    }
+
+    public function addPartage(Partage $partage): static
+    {
+        if (!$this->partages->contains($partage)) {
+            $this->partages->add($partage);
+            $partage->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removePartage(Partage $partage): static
+    {
+        if ($this->partages->removeElement($partage)) {
+            // set the owning side to null (unless already changed)
+            if ($partage->getIdUtilisateur() === $this) {
+                $partage->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Enregistrer>
+     */
+    public function getEnregistrers(): Collection
+    {
+        return $this->enregistrers;
+    }
+
+    public function addEnregistrer(Enregistrer $enregistrer): static
+    {
+        if (!$this->enregistrers->contains($enregistrer)) {
+            $this->enregistrers->add($enregistrer);
+            $enregistrer->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnregistrer(Enregistrer $enregistrer): static
+    {
+        if ($this->enregistrers->removeElement($enregistrer)) {
+            // set the owning side to null (unless already changed)
+            if ($enregistrer->getIdUtilisateur() === $this) {
+                $enregistrer->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participer>
+     */
+    public function getParticipers(): Collection
+    {
+        return $this->participers;
+    }
+
+    public function addParticiper(Participer $participer): static
+    {
+        if (!$this->participers->contains($participer)) {
+            $this->participers->add($participer);
+            $participer->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticiper(Participer $participer): static
+    {
+        if ($this->participers->removeElement($participer)) {
+            // set the owning side to null (unless already changed)
+            if ($participer->getIdUtilisateur() === $this) {
+                $participer->setIdUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupesUtilisateurs>
+     */
+    public function getGroupesUtilisateurs(): Collection
+    {
+        return $this->groupesUtilisateurs;
+    }
+
+    public function addGroupesUtilisateur(GroupesUtilisateurs $groupesUtilisateur): static
+    {
+        if (!$this->groupesUtilisateurs->contains($groupesUtilisateur)) {
+            $this->groupesUtilisateurs->add($groupesUtilisateur);
+            $groupesUtilisateur->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupesUtilisateur(GroupesUtilisateurs $groupesUtilisateur): static
+    {
+        if ($this->groupesUtilisateurs->removeElement($groupesUtilisateur)) {
+            // set the owning side to null (unless already changed)
+            if ($groupesUtilisateur->getIdUtilisateur() === $this) {
+                $groupesUtilisateur->setIdUtilisateur(null);
             }
         }
 

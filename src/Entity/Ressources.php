@@ -57,9 +57,25 @@ class Ressources
     #[ORM\OneToMany(targetEntity: Commentaires::class, mappedBy: 'idRessource')]
     private Collection $commentaires;
 
+    #[ORM\OneToMany(targetEntity: Partage::class, mappedBy: 'idRessource')]
+    private Collection $partages;
+
+    #[ORM\OneToMany(targetEntity: Enregistrer::class, mappedBy: 'idRessource')]
+    private Collection $enregistrers;
+
+    #[ORM\OneToMany(targetEntity: Participer::class, mappedBy: 'idRessource')]
+    private Collection $participers;
+
+    #[ORM\OneToMany(targetEntity: GroupesRessources::class, mappedBy: 'idRessource')]
+    private Collection $groupesRessources;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
+        $this->partages = new ArrayCollection();
+        $this->enregistrers = new ArrayCollection();
+        $this->participers = new ArrayCollection();
+        $this->groupesRessources = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -235,6 +251,126 @@ class Ressources
             // set the owning side to null (unless already changed)
             if ($commentaire->getIdRessource() === $this) {
                 $commentaire->setIdRessource(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Partage>
+     */
+    public function getPartages(): Collection
+    {
+        return $this->partages;
+    }
+
+    public function addPartage(Partage $partage): static
+    {
+        if (!$this->partages->contains($partage)) {
+            $this->partages->add($partage);
+            $partage->setIdRessource($this);
+        }
+
+        return $this;
+    }
+
+    public function removePartage(Partage $partage): static
+    {
+        if ($this->partages->removeElement($partage)) {
+            // set the owning side to null (unless already changed)
+            if ($partage->getIdRessource() === $this) {
+                $partage->setIdRessource(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Enregistrer>
+     */
+    public function getEnregistrers(): Collection
+    {
+        return $this->enregistrers;
+    }
+
+    public function addEnregistrer(Enregistrer $enregistrer): static
+    {
+        if (!$this->enregistrers->contains($enregistrer)) {
+            $this->enregistrers->add($enregistrer);
+            $enregistrer->setIdRessource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnregistrer(Enregistrer $enregistrer): static
+    {
+        if ($this->enregistrers->removeElement($enregistrer)) {
+            // set the owning side to null (unless already changed)
+            if ($enregistrer->getIdRessource() === $this) {
+                $enregistrer->setIdRessource(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participer>
+     */
+    public function getParticipers(): Collection
+    {
+        return $this->participers;
+    }
+
+    public function addParticiper(Participer $participer): static
+    {
+        if (!$this->participers->contains($participer)) {
+            $this->participers->add($participer);
+            $participer->setIdRessource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticiper(Participer $participer): static
+    {
+        if ($this->participers->removeElement($participer)) {
+            // set the owning side to null (unless already changed)
+            if ($participer->getIdRessource() === $this) {
+                $participer->setIdRessource(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GroupesRessources>
+     */
+    public function getGroupesRessources(): Collection
+    {
+        return $this->groupesRessources;
+    }
+
+    public function addGroupesRessource(GroupesRessources $groupesRessource): static
+    {
+        if (!$this->groupesRessources->contains($groupesRessource)) {
+            $this->groupesRessources->add($groupesRessource);
+            $groupesRessource->setIdRessource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupesRessource(GroupesRessources $groupesRessource): static
+    {
+        if ($this->groupesRessources->removeElement($groupesRessource)) {
+            // set the owning side to null (unless already changed)
+            if ($groupesRessource->getIdRessource() === $this) {
+                $groupesRessource->setIdRessource(null);
             }
         }
 

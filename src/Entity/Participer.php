@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\ParticiperRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ParticiperRepository::class)]
+class Participer
+{
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
+    // private ?int $id = null;
+
+    #[ORM\Id]
+    #[ORM\ManyToOne(inversedBy: 'participers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateurs $idUtilisateur = null;
+
+    #[ORM\Id]
+    #[ORM\ManyToOne(inversedBy: 'participers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Ressources $idRessource = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateParticipation = null;
+
+    // public function getId(): ?int
+    // {
+    //     return $this->id;
+    // }
+
+    public function getIdUtilisateur(): ?Utilisateurs
+    {
+        return $this->idUtilisateur;
+    }
+
+    public function setIdUtilisateur(?Utilisateurs $idUtilisateur): static
+    {
+        $this->idUtilisateur = $idUtilisateur;
+
+        return $this;
+    }
+
+    public function getIdRessource(): ?Ressources
+    {
+        return $this->idRessource;
+    }
+
+    public function setIdRessource(?Ressources $idRessource): static
+    {
+        $this->idRessource = $idRessource;
+
+        return $this;
+    }
+
+    public function getDateParticipation(): ?\DateTimeInterface
+    {
+        return $this->dateParticipation;
+    }
+
+    public function setDateParticipation(\DateTimeInterface $dateParticipation): static
+    {
+        $this->dateParticipation = $dateParticipation;
+
+        return $this;
+    }
+}
