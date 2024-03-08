@@ -7,12 +7,21 @@
 }
 
 .homepage {
+<<<<<<< HEAD
   font-family: 'Louis_George_Cafe';
   background-image: url('../imgs/background.png');
   background-repeat: no-repeat;
   background-position-x: center;
   background-position-y:-100%;
   overflow: hidden;
+=======
+    font-family: 'Louis_George_Cafe';
+    background-image: url('../imgs/background.png');
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y:-100%;
+    overflow: hidden;
+>>>>>>> fcf3fe2bf87d2b9745a9ac8d4bb252d123fd734a
 }
 
 body{
@@ -214,6 +223,7 @@ body{
 .button-container {
   display: flex;
   align-items: center;
+<<<<<<< HEAD
   margin-right: 10px;
 }
 
@@ -250,3 +260,6 @@ body{
 }
 
 /* Fin CSS Relation */
+=======
+}
+>>>>>>> fcf3fe2bf87d2b9745a9ac8d4bb252d123fd734a
