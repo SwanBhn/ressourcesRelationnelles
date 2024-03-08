@@ -21,13 +21,13 @@ class Utilisateurs
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, name: "MotDePasse")]
     private ?string $motDePasse = null;
 
     #[ORM\Column(length: 255)]
     private ?string $role = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false], name: "estDesactive")]
     private ?bool $estDesactive = null;
 
     #[ORM\OneToMany(targetEntity: Ressources::class, mappedBy: 'idUtilisateur')]

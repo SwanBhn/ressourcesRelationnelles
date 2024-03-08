@@ -24,7 +24,7 @@ class Enregistrer
     #[ORM\JoinColumn(name:"idRessource", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
     private ?Ressources $idRessource = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: "dateFavoris")]
     private ?\DateTimeInterface $dateFavoris = null;
 
     // public function getId(): ?int

@@ -22,25 +22,25 @@ class Ressources
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: "dateCreationRessource")]
     private ?\DateTimeInterface $dateCreation = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false], name: "estPubliee")]
     private ?bool $estPubliee = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false],name: "estValidee")]
     private ?bool $estValidee = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false], name: "estRestreinte")]
     private ?bool $estRestreinte = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false], name: "estExploitee")]
     private ?bool $estExploitee = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false], name:"estArchivee")]
     private ?bool $estArchivee = null;
 
-    #[ORM\Column(options: ["default" => false])]
+    #[ORM\Column(options: ["default" => false], name:"estDesactivee")]
     private ?bool $estDesactivee = null;
 
     #[ORM\Column(length: 255, nullable: true)]

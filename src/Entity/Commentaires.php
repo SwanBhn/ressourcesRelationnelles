@@ -19,7 +19,7 @@ class Commentaires
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: "dateCreationCommentaire")]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
