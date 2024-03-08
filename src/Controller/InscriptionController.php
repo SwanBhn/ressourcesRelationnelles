@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateurs;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,6 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InscriptionController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
     #[Route('/inscription', name: 'inscription')]
     public function setInscription(Request $request): Response
     {
@@ -25,7 +33,15 @@ class InscriptionController extends AbstractController
             ]);
         }
 
-        $this->addFlash('success', 'Inscription réussie ! Bienvenue, ' . $nomUtilisateur . ' !');
+        $utilisateur = new Utilisateurs();
+        $utilisateur->setNom($nomUtilisateur);
+        $utilisateur->setEmail($email);
+        $utilisateur->setMotDePasse($motDePasse);
+
+        $this->entityManager->persist($utilisateur);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Inscription réussie ! Bienvenue, ' . $nomUtilisateur . '!');
 
         return $this->render('accueil/index.html.twig', [
             'controller_name' => 'AccueilController',
