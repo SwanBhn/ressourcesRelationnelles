@@ -15,12 +15,12 @@ class GroupesUtilisateurs
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'groupesUtilisateurs')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:"idUtilisateur", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
     private ?Utilisateurs $idUtilisateur = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'groupesUtilisateurs')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:"idGroupe", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
     private ?Groupes $idGroupe = null;
 
     // public function getId(): ?int

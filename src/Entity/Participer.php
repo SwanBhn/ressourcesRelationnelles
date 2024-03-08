@@ -16,12 +16,12 @@ class Participer
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'participers')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:"idUtilisateur", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
     private ?Utilisateurs $idUtilisateur = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'participers')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:"idRessource", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
     private ?Ressources $idRessource = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
