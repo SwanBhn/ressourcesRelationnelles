@@ -8,14 +8,14 @@
               <span class="line line3"></span>
             </div>  
           <div class="logo">
-            <a  href="/"><img src="{{asset ('../imgs/logoCiviLink.png')}}" alt="Logo"/></a>
+            <a  href="{{path ('app_accueil')}}"><img src="{{asset ('../imgs/logoCiviLink.png')}}" alt="Logo"/></a>
           <span class="civilink">CiviLink</span>
                        
           </div>
           <div class="menu-items">
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
             <li><a href="{{ path('app_getRelations') }}">Relations</a></li>
-            <li><a href="#">Ressources</a></li>
+            <li><a href="{{path ('app_ressources')}}">Ressources</a></li>
             <li><a href="#">Mon Profil</a></li>
           </div>
         </div>

@@ -6,13 +6,13 @@
    
 }
 
-.homepage {
-  font-family: 'Louis_George_Cafe';
-  background-image: url('../imgs/background.png');
-  background-repeat: no-repeat;
-  background-position-x: center;
-  background-position-y:-100%;
-  overflow: hidden;
+.bodyWithImg{
+    font-family: 'Louis_George_Cafe';
+    background-image: url('../imgs/background.png'); 
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y:-100%;
+    overflow: hidden;
 }
 
 body{
@@ -180,7 +180,12 @@ body{
 .nav-container input[type="checkbox"]:checked ~ .logo{
   display: none;
 }
-
+  
+.tableRessources > h1{
+  align-items: center;
+ 
+}
+=======
 /* CSS Relation */
 .profile-button {
   background-color: #007bff;
