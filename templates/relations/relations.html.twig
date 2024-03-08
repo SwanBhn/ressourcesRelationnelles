@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Relations
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="tableRelations">
+
+        <h1>Bonjour {{nomUtilisateur}}, voici vos relations :</h1>
+
+            {% for relation in relations %}
+                
+                    <div class="user-container">
+                        {% if relation.imageAmi %}
+                            <img src={{relation.imageAmi}} alt="Profile Picture" class="profile-picture">
+                        {% endif %}
+
+                        <div class="user-info">
+
+                            <h2 class="username">{{ relation.nomAmi }}</h2>
+
+                            {% if relation.descriptionAmi %}
+                                <p class="description">{{relation.descriptionAmi}}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="button-container">
+                            <a href="{# TODO: Ajouter le path pour acceder au profil#}">
+                                <button class="profile-button">Profil</button>
+                            </a>
+                            <a href="/SupprimerRelation/{{ relation.idAmi }}">
+                                <button class="unfollow-button">Ne plus suivre</button>
+                            </a>
+                        </div>
+                    </div>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

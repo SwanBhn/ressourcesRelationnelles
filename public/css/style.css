@@ -6,15 +6,6 @@
    
 }
 
-body {
-    font-family: 'Louis_George_Cafe';
-    /* background-image: url('../imgs/background.png'); */
-    /* background-repeat: no-repeat; */
-    /* background-position-x: center; */
-    /* background-position-y:-100%; */
-    /* overflow: hidden; */
-  
-}
 .bodyWithImg{
     font-family: 'Louis_George_Cafe';
     background-image: url('../imgs/background.png'); 
@@ -23,11 +14,6 @@ body {
     background-position-y:-100%;
     overflow: hidden;
 }
-
-.test{
-    color: red;
-}
-
 
 body{
     font-family: 'Louis_George_Cafe' ;
@@ -38,8 +24,6 @@ body{
   box-sizing: border-box;
   font-family: 'Louis_George_Cafe';
 }
-
-
 
 .container {
   max-width: 1050px;
@@ -157,8 +141,6 @@ body{
   
  }
 
-
-
 .logo {
   position: absolute;
   top: 5px;
@@ -179,7 +161,6 @@ body{
   margin-left: 5px;
 }
 
-
 .nav-container input[type="checkbox"]:checked ~ .menu-items {
   transform: translateX(0);
 }
@@ -199,9 +180,77 @@ body{
 .nav-container input[type="checkbox"]:checked ~ .logo{
   display: none;
 }
-
-
+  
 .tableRessources > h1{
   align-items: center;
  
 }
+=======
+/* CSS Relation */
+.profile-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.profile-button:hover {
+  background-color: #0069d9;
+}
+
+.unfollow-button {
+  background-color: #ff3b30;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.unfollow-button:hover {
+  background-color: #e63125;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.profile-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.username {
+  margin: 0;
+  font-size: 16px;
+}
+
+.description {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+  color: #666;
+}
+/* Fin CSS Relation */

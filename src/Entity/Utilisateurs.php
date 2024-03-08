@@ -60,6 +60,12 @@ class Utilisateurs
     #[ORM\OneToMany(targetEntity: GroupesUtilisateurs::class, mappedBy: 'idUtilisateur')]
     private Collection $groupesUtilisateurs;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->ressources = new ArrayCollection();
@@ -435,6 +441,30 @@ class Utilisateurs
                 $groupesUtilisateur->setIdUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
