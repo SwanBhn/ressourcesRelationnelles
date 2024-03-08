@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Relations
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="tableRelations">
+
+        <h1>Bonjour {{nomUtilisateur}}, voici vos relations :</h1>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Profil</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for relation in relations %}
+                <tr>
+                    <th scope="row">{{ relation.idAmi }}</th>
+                    <td>{{ relation.nomAmi }}</td>
+                    <td>
+                        <a href="#">
+                            {# TODO: Ajouter le path du profil #}
+                            <button> O </button>
+                        </a> 
+                    </td>
+                    <td> 
+                        <a href="/SupprimerRelation/{{ relation.idAmi }}">
+                            <button> X </button>
+                        </a> 
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -6,14 +6,13 @@
    
 }
 
-body {
+.accueil {
     font-family: 'Louis_George_Cafe';
     background-image: url('../imgs/background.png');
     background-repeat: no-repeat;
     background-position-x: center;
     background-position-y:-100%;
     overflow: hidden;
-  
 }
 
 .test{
@@ -190,4 +189,8 @@ body{
 
 .nav-container input[type="checkbox"]:checked ~ .logo{
   display: none;
+}
+
+.tableRelations > h1{
+  align-items: center;
 }
