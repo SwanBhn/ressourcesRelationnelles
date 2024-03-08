@@ -29,8 +29,10 @@ class RelationsController extends AbstractController
         foreach ($amis as $ami) {
             $tableau[] = [
                 'idUtilisateur' => $ami->getIdUtilisateur(),
+                'imageAmi' => $ami->getIdUtilisateurAmi()->getPhoto(),
                 'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
                 'nomAmi' => $ami->getIdUtilisateurAmi()->getNom(),
+                'descriptionAmi' => $ami->getIdUtilisateurAmi()->getDescription()
             ];
         }
 
