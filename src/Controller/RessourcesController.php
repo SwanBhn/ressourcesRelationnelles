@@ -2,36 +2,56 @@
 
 namespace App\Controller;
 use App\Entity\Ressources;
+use App\Entity\Commentaires;
+use App\Entity\Utilisateurs;
 use App\Repository\RessourcesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Persistence\ManagerRegistry;
 
-
-
 class RessourcesController extends AbstractController
 {
     #[Route('/ressources', name: 'app_ressources')]
-    public function index(RessourcesRepository $repository)
+    public function getRessources(EntityManagerInterface $entityManager)
     {
+        $ressources = $entityManager->getRepository(Ressources::class)->findAll();
         
-        $ressources = $repository->findAll();
-       
         return $this->render('ressources/index.html.twig', [
             'ressources' => $ressources]);
     }
 
-    #[Route('/ressource/{id}', name: 'app_detailressources')]
-    public function indexparId(RessourcesRepository $repository, $id)
+    #[Route('/ressource/{idRessource}', name: 'app_detailressources')]
+    public function indexparId(EntityManagerInterface $entityManager, $idRessource)
     {
+        // TODO: Connecter avec la connexion
+        $utilisateur = $entityManager->getRepository(Utilisateurs::class)->find(1);
         
-        $ressource = $repository->find($id);
+        $ressource = $entityManager->getRepository(Ressources::class)->find($idRessource);
+
+        $commentaires = $entityManager->getRepository(Commentaires::class)->findBy(['idRessource' => $idRessource]);
+        
+        $commentairesTab = [];
+        foreach ($commentaires as $commentaire) {
+            $commentairesTab[] = [
+                'idCommentaire' => $commentaire->getId(),
+                'contenu' => $commentaire->getContenu(),
+                'dateCreation' => $commentaire->getDateCreation(),
+                'nomUtilisateur' => $commentaire->getIdUtilisateur()->getNom(),
+                'photoUtilisateur' => $commentaire->getIdUtilisateur()->getPhoto()
+            ];
+        }
        
         return $this->render('ressources/detailRessource.html.twig', [
-            'ressource' => $ressource]);
+            'ressource' => $ressource,
+            "utilisateur" => $utilisateur,
+            'commentaires' => $commentairesTab
+        ]);
     }
+
+    //-----Routes API-----//
 
     #[Route('/api/ressources', name: 'app_api_ressources', methods: ['GET'])]
     public function getRessourcesApi(ManagerRegistry $doctrine): Response

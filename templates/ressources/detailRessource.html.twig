@@ -137,38 +137,48 @@
 
 <!-- Section des commentaires -->
 <div class="comment-section">
+    {# Boutons favoris #}
     <input type="button" value="Ajouter en favoris" class="favoris">
     <input type="button" value="Retirer des favoris" class="favoris-remove">
-    <h2 class="comment-count">2 Commentaires</h2>
+
+    <h2 class="comment-count">{{ commentaires|length }} Commentaires</h2>
     <form class="comment-form" action="" method="post" style="margin-bottom:20px">
-        <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
+        <img src="{{ utilisateur.photo }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px; object-fit: cover;">
         <input type="text" name="contenu" id="comment-input" placeholder="Ajoutez un commentaire...">
         <input type="submit" class="cancel-command" onclick="clearComment()" value="Annuler" style="margin-right:10px;">
         <input type="submit" class="send" id="submit-button" value="Envoyer" disabled>
     </form>
-    <div class="comment">
-        <div class="user-comment">
-            <div class="logo-container">
-                <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo">
+
+
+    {% for commentaire in commentaires %}
+
+        <div class="comment">
+            <div class="user-comment">
+                <div class="logo-container">
+                    {# Mettre le logo de l'utilisateur qui à commenté#}
+                    <img src="{{ commentaire.photoUtilisateur }}" class="rounded-logo" alt="Logo" style="object-fit: cover;">
+                </div>
+                <div class="margin-logo">
+                    <h1 class="username-comment">{{ commentaire.nomUtilisateur }}</h1>
+                    <h1 class="comment-date">{{ commentaire.dateCreation|date("d/m/Y") }}</h1>
+                </div>
             </div>
-            <div class="margin-logo">
-                <h1 class="username-comment">Nom de l'utilisateur</h1>
-                <h1 class="comment-date">24/05/2024</h1>
+            <div class="comment-content">
+                <h1 class="comment-body">{{ commentaire.contenu }}</h1>
+                <button class="reply-comment" onclick="showReplyForm()">REPONDRE</button>
+                <div id="reply-form" style="display: none;">
+                    <form action="" method="post">
+                        {# Mettre le logo de l'utilisateur actuel #}
+                        <img src="{{ utilisateur.photo }}" class="rounded-logo" alt="?" style="border-radius: 50%; margin-right: 10px; object-fit: cover; ">
+                        <input type="text" name="reply" placeholder="Ajouter une réponse..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <button type="button" class="cancel" onclick="cancelReply()" class="cancel-reply" style="background-color: #4CAF50; border-radius: 5px; border: none; padding: 10px 20px;">Annuler</button>
+                        <input type="submit" value="Envoyer" style="background-color: #2432f0; border-radius: 5px; border: none; padding: 10px 20px;">
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="comment-content">
-            <h1 class="comment-body">un commentaire</h1>
-            <button class="reply-comment" onclick="showReplyForm()">REPONDRE</button>
-            <div id="reply-form" style="display: none;">
-                <form action="" method="post">
-                    <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
-                    <input type="text" name="reply" placeholder="Ajouter une réponse..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                    <button type="button" class="cancel" onclick="cancelReply()" class="cancel-reply" style="background-color: #4CAF50; border-radius: 5px; border: none; padding: 10px 20px;">Annuler</button>
-                    <input type="submit" value="Envoyer" style="background-color: #2432f0; border-radius: 5px; border: none; padding: 10px 20px;">
-                </form>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
+
 </div>
 
 <script>
