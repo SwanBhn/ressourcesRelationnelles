@@ -93,8 +93,10 @@
         .comment-form input[type="submit"].cancel {
             background-color: #4CAF50; /* Vert */
         }
+        .comment-form input[type="submit"].send:hover{
+             background-color: #2494f0  ; 
+        }
         .comment-form input[type="submit"].cancel:hover,
-        .comment-form input[type="submit"].send:hover,
         .comment-form input[type="submit"].cancel-command:hover {
             background-color: #45a049; /* Vert plus clair au hover */
         }
@@ -138,8 +140,8 @@
                 <form action="" method="post">
                     <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
                     <input type="text" name="reply" placeholder="Ajouter une réponse...">
-                    <button type="button" class="cancel" onclick="cancelReply()">Annuler</button>
-                    <input type="submit" value="Envoyer">
+                    <button type="button" class="cancel" onclick="cancelReply()" style="background-color: #4CAF50;">Annuler</button>
+                    <input type="submit" value="Envoyer" style="background-color: #2432f0;">
                 </form>
             </div>
         </div>
