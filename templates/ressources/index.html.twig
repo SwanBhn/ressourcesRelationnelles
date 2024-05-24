@@ -24,10 +24,10 @@
       {% for ressource in ressources %}
         <tr>
           <th scope="row">{{ ressource.id }}</th>
-          <td>{{ ressource.titre }}</td>
+          <td><a href="{{path('app_detailressources', {'id' : ressource.id}) }}">{{ ressource.titre }}</a></td>
           <td>{{ ressource.contenu }}</td>
           <td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
-          <td>{{ ressource.multimedia }}</td>
+          <td><img src="{{ ressource.multimedia }}" style="width:200px"/></td>
           <td>{{ ressource.idCategorie.nom }}</td>
           <td>{{ressource.idUtilisateur.nom}}</td> 
             
