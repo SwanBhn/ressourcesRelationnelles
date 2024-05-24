@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Profil de Mon Nom ✅</h1>
+
+    <form id="profile-form">
+        <div class="form-group">
+            <label for="name">Nom:</label>
+            <input type="text" id="name" name="name" value="Mon Nom" disabled>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="monmail@mail.com" disabled>
+        </div>
+        <button type="button" id="edit-button" class="profile-button">Modifier mes informations</button>
+        <button type="button" id="save-button" style="display: none;" class="save-button">Enregistrer</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButton = document.getElementById('edit-button');
+        const saveButton = document.getElementById('save-button');
+        const nameField = document.getElementById('name');
+        const emailField = document.getElementById('email');
+
+        const initialName = nameField.value;
+        const initialEmail = emailField.value;
+
+        editButton.addEventListener('click', function() {
+            if (nameField.disabled) {
+                nameField.disabled = false;
+                emailField.disabled = false;
+                editButton.textContent = 'Annuler mes changements';
+                saveButton.style.display = 'inline-block';
+            } else {
+                nameField.value = initialName;
+                emailField.value = initialEmail;
+                nameField.disabled = true;
+                emailField.disabled = true;
+                editButton.textContent = 'Modifier mes informations';
+                saveButton.style.display = 'none';
+            }
+        });
+
+        [nameField, emailField].forEach(field => {
+            field.addEventListener('input', function() {
+                saveButton.style.display = 'inline-block';
+            });
+        });
+    });
+</script>
+
+{% endblock %}
