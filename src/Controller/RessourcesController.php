@@ -23,6 +23,15 @@ class RessourcesController extends AbstractController
             'ressources' => $ressources]);
     }
 
+    #[Route('/ressource/{id}', name: 'app_detailressources')]
+    public function indexparId(RessourcesRepository $repository, $id)
+    {
+        
+        $ressource = $repository->find($id);
+       
+        return $this->render('ressources/detailRessource.html.twig', [
+            'ressource' => $ressource]);
+    }
 
     #[Route('/api/ressources', name: 'app_api_ressources', methods: ['GET'])]
     public function getRessourcesApi(ManagerRegistry $doctrine): Response

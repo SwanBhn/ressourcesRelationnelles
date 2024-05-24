@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ressource{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Styles pour la section des commentaires */
+        .comment-section {
+            margin-top: 20px;
+        }
+        .comment-count{
+            font-size:30px;
+        }
+        .comment {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .logo-container {
+            margin-right: 10px;
+            width: 50px; /* Largeur désirée du logo */
+            height: 50px; /* Hauteur désirée du logo */
+            overflow: hidden; /* Masquer les parties de l'image qui dépassent */
+            border-radius: 50%; /* Créer un cercle en appliquant un rayon égal à la moitié de la largeur ou de la hauteur */
+        }
+
+        .rounded-logo {
+            width: 50px; /* Assurer que l'image remplit complètement le conteneur rond */
+            height: 50px; /* Ajuster automatiquement la hauteur en fonction de la largeur pour conserver les proportions de l'image */
+        }
+        .margin-logo {
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .user-comment {
+            display: flex;
+            font-size: 20px;
+        }
+        .username-comment {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .comment-date {
+            font-size: 20px;
+            color: grey;
+        }   
+        .comment-body {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .reply-comment {
+            font-size: 11px;
+            color: grey;
+            margin-bottom: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .reply-comment:hover {
+            color: #555;
+        }
+        .comment-form {
+            margin-top: 20px;
+            display: flex; /* Permet de placer les éléments horizontalement */
+            align-items: center; /* Centre les éléments verticalement */
+        }
+        .comment-form input[type="text"] {
+            flex: 1; /* Permet à l'input de prendre autant d'espace que possible */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px; /* Espacement à droite */
+        }
+        .comment-form input[type="submit"] {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .comment-form input[type="submit"].send {
+            background-color: #2432f0; /* Bleu */
+        }
+        .comment-form input[type="submit"].cancel-command {
+            background-color: #4CAF50; /* Vert */
+        }
+        .comment-form input[type="submit"].cancel {
+            background-color: #4CAF50; /* Vert */
+        }
+        .comment-form input[type="submit"].send:hover{
+             background-color: #2494f0  ; 
+        }
+        .comment-form input[type="submit"].cancel:hover,
+        .comment-form input[type="submit"].cancel-command:hover {
+            background-color: #45a049; /* Vert plus clair au hover */
+        }
+        /* Ajout de style pour aligner le contenu du commentaire avec le nom d'utilisateur */
+        .comment-content {
+            margin-left: 60px; /* Ajustez cet espacement selon vos besoins */
+        }
+        .favoris{
+            margin-bottom:20px;
+            background-color:#f5e902;
+            border-radius: 5px;
+            border: none;
+            padding: 10px 20px;
+        }
+        .favoris:hover{
+            background-color:#f7ed2f;
+        }
+        .favoris-remove{
+            margin-bottom:20px;
+            background-color:#d10000;
+            border-radius: 5px;
+            border: none;
+            padding: 10px 20px;
+        }
+        .favoris-remove:hover{
+            background-color:#d90b0b;
+        }
+        .cancel-reply{
+            
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <h1>{{ ressource.titre }}</h1>
+    <img src="{{ ressource.multimedia }}" style="width:500px"/>
+
+<!-- Section des commentaires -->
+<div class="comment-section">
+    <input type="button" value="Ajouter en favoris" class="favoris">
+    <input type="button" value="Retirer des favoris" class="favoris-remove">
+    <h2 class="comment-count">2 Commentaires</h2>
+    <form class="comment-form" action="" method="post" style="margin-bottom:20px">
+        <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
+        <input type="text" name="contenu" id="comment-input" placeholder="Ajoutez un commentaire...">
+        <input type="submit" class="cancel-command" onclick="clearComment()" value="Annuler" style="margin-right:10px;">
+        <input type="submit" class="send" id="submit-button" value="Envoyer" disabled>
+    </form>
+    <div class="comment">
+        <div class="user-comment">
+            <div class="logo-container">
+                <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo">
+            </div>
+            <div class="margin-logo">
+                <h1 class="username-comment">Nom de l'utilisateur</h1>
+                <h1 class="comment-date">24/05/2024</h1>
+            </div>
+        </div>
+        <div class="comment-content">
+            <h1 class="comment-body">un commentaire</h1>
+            <button class="reply-comment" onclick="showReplyForm()">REPONDRE</button>
+            <div id="reply-form" style="display: none;">
+                <form action="" method="post">
+                    <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
+                    <input type="text" name="reply" placeholder="Ajouter une réponse...">
+                    <button type="button" class="cancel" onclick="cancelReply()" class="cancel-reply" style="background-color: #4CAF50; border-radius: 5px; border: none; padding: 10px 20px;">Annuler</button>
+                    <input type="submit" value="Envoyer" style="background-color: #2432f0; border-radius: 5px; border: none; padding: 10px 20px;">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function clearComment() {
+        document.getElementById('comment-input').value = '';
+    }
+    function showReplyForm() {
+        var replyForm = document.getElementById('reply-form');
+        var cancelButton = document.querySelector('.cancel');
+        replyForm.style.display = 'block';
+        cancelButton.style.display = 'inline-block';
+    }
+
+    function cancelReply() {
+        var replyForm = document.getElementById('reply-form');
+        var cancelButton = document.querySelector('.cancel');
+        replyForm.style.display = 'none';
+        cancelButton.style.display = 'none';
+    }
+</script>
+
+{% endblock %}
