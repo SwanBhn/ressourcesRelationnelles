@@ -265,6 +265,7 @@ class Utilisateurs
         return $this;
     }
 
+
     /**
      * @return Collection<int, Amis>
      */
@@ -468,4 +469,26 @@ class Utilisateurs
 
         return $this;
     }
+
+
+    public function getUsername(?string $UserName): static
+    {
+        $this->UserName = $UserName;
+
+        return $this;
+    }
+    public function getPassword(?string $Password): static
+    {
+        $this->Password = $Password;
+
+        return $this;
+    }
+    public function getRoles(?string $getRoles): static
+    {
+        $this->Role = $getRoles;
+
+        return $this;
+    }
+
+
 }
