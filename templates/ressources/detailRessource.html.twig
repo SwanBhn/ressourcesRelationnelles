@@ -104,18 +104,41 @@
         .comment-content {
             margin-left: 60px; /* Ajustez cet espacement selon vos besoins */
         }
+        .favoris{
+            margin-bottom:20px;
+            background-color:#f5e902;
+            border-radius: 5px;
+            border: none;
+            padding: 10px 20px;
+        }
+        .favoris:hover{
+            background-color:#f7ed2f;
+        }
+        .favoris-remove{
+            margin-bottom:20px;
+            background-color:#d10000;
+            border-radius: 5px;
+            border: none;
+            padding: 10px 20px;
+        }
+        .favoris-remove:hover{
+            background-color:#d90b0b;
+        }
+        .cancel-reply{
+            
+        }
     </style>
 {% endblock %}
 
 {% block body %}
 
-<div>
     <h1>{{ ressource.titre }}</h1>
     <img src="{{ ressource.multimedia }}" style="width:500px"/>
-</div>
 
 <!-- Section des commentaires -->
 <div class="comment-section">
+    <input type="button" value="Ajouter en favoris" class="favoris">
+    <input type="button" value="Retirer des favoris" class="favoris-remove">
     <h2 class="comment-count">2 Commentaires</h2>
     <form class="comment-form" action="" method="post" style="margin-bottom:20px">
         <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
@@ -140,8 +163,8 @@
                 <form action="" method="post">
                     <img src="{{ ressource.multimedia }}" class="rounded-logo" alt="Logo" style="border-radius: 50%; margin-right: 10px;">
                     <input type="text" name="reply" placeholder="Ajouter une réponse...">
-                    <button type="button" class="cancel" onclick="cancelReply()" style="background-color: #4CAF50;">Annuler</button>
-                    <input type="submit" value="Envoyer" style="background-color: #2432f0;">
+                    <button type="button" class="cancel" onclick="cancelReply()" class="cancel-reply" style="background-color: #4CAF50; border-radius: 5px; border: none; padding: 10px 20px;">Annuler</button>
+                    <input type="submit" value="Envoyer" style="background-color: #2432f0; border-radius: 5px; border: none; padding: 10px 20px;">
                 </form>
             </div>
         </div>
