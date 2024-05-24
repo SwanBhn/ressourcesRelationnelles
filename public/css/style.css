@@ -159,6 +159,10 @@ body{
   margin-left: 5px;
 }
 
+.body-no-overflow {
+  overflow: hidden;
+}
+
 .nav-container input[type="checkbox"]:checked ~ .menu-items {
   transform: translateX(0);
 }
