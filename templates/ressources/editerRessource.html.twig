@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier votre ressource{% endblock %}
+
+{% block body %}
+    <h1>Modifier votre ressource</h1>
+
+    {{ form_errors(ressourcePutForm) }}
+
+    {{ form_start(ressourcePutForm) }}
+        <div style="margin-bottom: 20px;">
+            {{ form_row(ressourcePutForm.titre) }}
+        </div>
+        <div style="margin-bottom: 20px;">
+            {{ form_row(ressourcePutForm.contenu) }}
+        </div>
+        <div style="margin-bottom: 20px;">
+            {{ form_row(ressourcePutForm.multimedia) }}
+        </div>
+
+        <button type="submit" id="save-button" class="btn btn-success">Modifier</button>
+    {{ form_end(ressourcePutForm) }}
+{% endblock %}
+
+

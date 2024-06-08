@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer votre ressource{% endblock %}
+
+{% block body %}
+    <h1>Créer votre ressource</h1>
+
+    {{ form_errors(ressourcePostForm) }}
+
+    {{ form_start(ressourcePostForm) }}
+        <div style="margin-bottom: 20px;">
+            {{ form_row(ressourcePostForm.titre) }}
+        </div>
+        <div style="margin-bottom: 20px;">
+            {{ form_row(ressourcePostForm.contenu) }}
+        </div>
+        <div style="margin-bottom: 20px;">
+            {{ form_row(ressourcePostForm.multimedia) }}
+        </div>
+
+        <button type="submit" id="save-button" class="btn btn-success">Créer</button>
+    {{ form_end(ressourcePostForm) }}
+{% endblock %}
+
+

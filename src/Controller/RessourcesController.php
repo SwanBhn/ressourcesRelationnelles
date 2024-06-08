@@ -1,18 +1,22 @@
 <?php
 
 namespace App\Controller;
-use App\Entity\Ressources;
-use App\Entity\User;
+use App\Entity\Categories;
 use App\Entity\Commentaires;
 use App\Entity\Enregistrer;
+use App\Entity\Ressources;
+use App\Entity\User;
+use App\Form\RessourcePostFormType;
+use App\Form\RessourcePutFormType;
 use App\Repository\RessourcesRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface; 
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RessourcesController extends AbstractController
 {
@@ -44,6 +48,70 @@ class RessourcesController extends AbstractController
         ]);
     }
 
+    #[Route('/ressources/creer', name: 'app_creer_ressource')]
+    public function postRessource(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $ressource = new Ressources();
+        $form = $this->createForm(RessourcePostFormType::class, $ressource);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $currentDate = new \DateTime();
+            $categorie = $entityManager->getRepository(Categories::class)->find(1);
+
+            $ressource->setDateCreation($currentDate);
+            $ressource->setEstPubliee(false);
+            $ressource->setEstValidee(false);
+            $ressource->setEstRestreinte(false);
+            $ressource->setEstExploitee(true);
+            $ressource->setEstArchivee(false);
+            $ressource->setEstDesactivee(false);
+            $ressource->setIdUtilisateur($this->getUser());
+            $ressource->setIdCategorie($categorie);
+            $entityManager->persist($ressource);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_ressources');
+        }
+
+        return $this->render('ressources/creerRessource.html.twig', [
+            'ressourcePostForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/ressources/editer/{id}', name: 'app_editer_ressource')]
+    public function putRessource($id, Request $request, EntityManagerInterface $entityManager): Response
+    {       
+        $ressource = $entityManager->getRepository(Ressources::class)->find($id);
+
+        $form = $this->createForm(RessourcePutFormType::class, $ressource);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $currentDate = new \DateTime();
+            $categorie = $entityManager->getRepository(Categories::class)->find(1);
+
+            $ressource->setDateCreation($currentDate);
+            $ressource->setEstPubliee(false);
+            $ressource->setEstValidee(false);
+            $ressource->setEstRestreinte(false);
+            $ressource->setEstExploitee(true);
+            $ressource->setEstArchivee(false);
+            $ressource->setEstDesactivee(false);
+            $ressource->setIdUtilisateur($this->getUser());
+            $ressource->setIdCategorie($categorie);
+
+            // $entityManager->persist($ressource);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_ressources');
+        }
+
+        return $this->render('ressources/editerRessource.html.twig', [
+            'ressourcePutForm' => $form->createView(),
+        ]);
+    }
+
     #[Route('/ressources/supprimer/{id}', name: 'app_supprimer_ressource', methods: ['DELETE'])]
     public function deleteRessource($id, EntityManagerInterface $entityManager): RedirectResponse
     {
@@ -65,7 +133,7 @@ class RessourcesController extends AbstractController
     public function getRessource(EntityManagerInterface $entityManager, $id)
     {
         $estEnregistrer = false;
-        
+
         $user = $this->getUser();
 
         $ressource = $entityManager->getRepository(Ressources::class)->find($id);
