@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Amis;
+use App\Entity\Utilisateurs;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<Amis>
@@ -16,9 +18,27 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AmisRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, Amis::class);
+        $this->entityManager = $entityManager;
+    }
+
+    public function findFriendsByUserId($userId)
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        $queryBuilder
+            ->select('a')
+            ->from(Amis::class, 'a')
+            ->innerJoin(Utilisateurs::class, 'u', 'WITH', 'a.idUtilisateur = u.id')
+            ->where('a.idUtilisateur = :userId OR a.idUtilisateurAmi = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('u.nom', 'ASC');
+
+        $amis = $queryBuilder->getQuery()->getResult();
+
+        return $amis;
     }
 
 //    /**
