@@ -143,6 +143,7 @@ class RessourcesController extends AbstractController
         $commentairesTab = [];
         foreach ($commentaires as $commentaire) {
             $commentairesTab[] = [
+                'idUtilisateur' => $commentaire->getIdUtilisateur()->getId(),
                 'idCommentaire' => $commentaire->getId(),
                 'contenu' => $commentaire->getContenu(),
                 'dateCreation' => $commentaire->getDateCreation(),

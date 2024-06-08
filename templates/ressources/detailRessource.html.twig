@@ -76,7 +76,7 @@
             border-radius: 5px;
             margin-right: 10px; /* Espacement à droite */
         }
-        .comment-form input[type="submit"] {
+        .comment-form input[type="submit"], input[type="button"]  {
             padding: 10px 20px;
             color: white;
             border: none;
@@ -87,17 +87,17 @@
         .comment-form input[type="submit"].send {
             background-color: #2432f0; /* Bleu */
         }
-        .comment-form input[type="submit"].cancel-command {
+        .comment-form input[type="button"].cancel-command {
             background-color: #4CAF50; /* Vert */
         }
-        .comment-form input[type="submit"].cancel {
+        .comment-form input[type="button"].cancel {
             background-color: #4CAF50; /* Vert */
         }
         .comment-form input[type="submit"].send:hover{
              background-color: #2494f0  ; 
         }
-        .comment-form input[type="submit"].cancel:hover,
-        .comment-form input[type="submit"].cancel-command:hover {
+        .comment-form input[type="button"].cancel:hover,
+        .comment-form input[type="button"].cancel-command:hover {
             background-color: #45a049; /* Vert plus clair au hover */
         }
         /* Ajout de style pour aligner le contenu du commentaire avec le nom d'utilisateur */
@@ -151,14 +151,14 @@
     {% endif %}
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    {# Ajouter commentaire #}
-    <h2 class="comment-count">{{ commentaires|length }} Commentaires</h2>
-    <form class="comment-form" action="" method="post" style="margin-bottom:20px">
+        {# Ajouter commentaire #}
+        <h2 class="comment-count">{{ commentaires|length }} Commentaires</h2>
         <img src="{{ utilisateur.photo }}" class="rounded-logo" alt="" style="border-radius: 50%; margin-right: 10px; object-fit: cover;">
-        <input type="text" name="contenu" id="comment-input" placeholder="Ajoutez un commentaire...">
-        <input type="submit" class="cancel-command" onclick="clearComment()" value="Annuler" style="margin-right:10px;">
-        <input type="submit" class="send" id="submit-button" value="Envoyer" disabled>
-    </form>
+        <form class="comment-form" action="{{ path('app_add_commentaire', {'id': ressource.id}) }}" method="post" style="margin-bottom:20px">
+            <input type="text" name="contenu" id="comment-input" placeholder="Ajoutez un commentaire...">
+            <input type="button" class="cancel-command" onclick="clearComment()" value="Annuler" style="margin-right:10px;">
+            <input type="submit" class="send" id="submit-button" value="Envoyer">
+        </form>
     {% endif %}
 
     {# Section commentaire #}
@@ -177,6 +177,12 @@
             </div>
             <div class="comment-content">
                 <h1 class="comment-body">{{ commentaire.contenu }}</h1>
+
+                {% if is_granted('IS_AUTHENTICATED_FULLY') and (utilisateur.id == commentaire.idUtilisateur)%}
+                    <form method="delete" action="{{ path('app_delete_commentaire', {'idCommentaire': commentaire.idCommentaire}) }}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                {% endif %}
 
                 {# <!-- Ajouter une reponse -->
                 <button class="reply-comment" onclick="showReplyForm()">REPONDRE</button>
