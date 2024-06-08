@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 use App\Entity\Ressources;
+use App\Entity\User;
+use App\Entity\Commentaires;
 use App\Repository\RessourcesRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface; 
@@ -14,22 +16,40 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RessourcesController extends AbstractController
 {
     #[Route('/ressources', name: 'app_ressources')]
-    public function index(RessourcesRepository $repository)
+    public function getRessources(EntityManagerInterface $entityManager)
     {
+        $ressources = $entityManager->getRepository(Ressources::class)->findAll();
         
-        $ressources = $repository->findAll();
-       
-        return $this->render('ressources/index.html.twig', [
-            'ressources' => $ressources]);
+        $user = $this->getUser();
+
+        $utilisateurId = "";
+
+        if(!is_null($user)){
+            $userId = $user->getId();
+
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
+                throw new Exception('Erreur lors de la récupération de votre compte');
+            }
+            else{
+                //Ressource avec connexion
+                $utilisateurId = $userId;
+            }
+        }
+
+        return $this->render('ressources/ressources.html.twig', [
+            'ressources' => $ressources,
+            'utilisateurId' => $utilisateurId
+        ]);
     }
 
-    #[Route('/ressources/supprimer/{id}', name: 'app_supprimer_ressource', methods: ['POST'])]
-    public function supprimerRessource($id, RessourcesRepository $repository, EntityManagerInterface $entityManager): RedirectResponse
+    #[Route('/ressources/supprimer/{id}', name: 'app_supprimer_ressource', methods: ['DELETE'])]
+    public function deleteRessource($id, EntityManagerInterface $entityManager): RedirectResponse
     {
-        $ressource = $repository->find($id);
+        $ressource = $entityManager->getRepository(Ressources::class)->find($id);
 
         if (!$ressource) {
-            $errorMessage = 'La ressource avec l\'identifiant ' . $id . ' n\'existe pas.';
+            $errorMessage = 'La ressource ' . $ressource->GetNom() . ' n\'existe pas.';
             $this->addFlash('error', $errorMessage);
         } else {
             $entityManager->remove($ressource);
@@ -41,13 +61,47 @@ class RessourcesController extends AbstractController
     }
   
     #[Route('/ressource/{id}', name: 'app_detailressources')]
-    public function indexparId(RessourcesRepository $repository, $id)
+    public function getRessource(EntityManagerInterface $entityManager, $id)
     {
+        $user = $this->getUser();
+
+        $ressource = $entityManager->getRepository(Ressources::class)->find($id);
+
+        $commentaires = $entityManager->getRepository(Commentaires::class)->findBy(['idRessource' => $id]);
         
-        $ressource = $repository->find($id);
-       
+        $commentairesTab = [];
+        foreach ($commentaires as $commentaire) {
+            $commentairesTab[] = [
+                'idCommentaire' => $commentaire->getId(),
+                'contenu' => $commentaire->getContenu(),
+                'dateCreation' => $commentaire->getDateCreation(),
+                'nomUtilisateur' => $commentaire->getIdUtilisateur()->getNom(),
+                'photoUtilisateur' => $commentaire->getIdUtilisateur()->getPhoto()
+            ];
+        }
+
+        if(is_null($user)){
+            //Ressource sans connexion
+            $utilisateur = null;
+        }
+        else{
+            $userId = $user->getId();
+
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
+                throw new Exception('Erreur lors de la récupération de votre compte');
+            }
+            else{
+                //Ressource avec connexion
+                $utilisateur = $entityManager->getRepository(User::class)->find($userId);
+            }
+        }
+                   
         return $this->render('ressources/detailRessource.html.twig', [
-            'ressource' => $ressource]);
+            'ressource' => $ressource,
+            'utilisateur' => $utilisateur,
+            'commentaires' => $commentairesTab
+        ]);
     }
 
     //----- API -----//
@@ -83,7 +137,7 @@ class RessourcesController extends AbstractController
     }
 
      #[Route('/api/ressources/{id}', name: 'app_api_ressources_id', methods: ['GET'])]
-    public function getRessource(ManagerRegistry $doctrine, $id): Response
+    public function getRessourceApi(ManagerRegistry $doctrine, $id): Response
     {
      $repository = $doctrine->getRepository(Ressources::class);
      $ressource = $repository->find($id);

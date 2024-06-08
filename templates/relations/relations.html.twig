@@ -9,7 +9,7 @@
 <div class="container mt-4">
     <div class="tableRelations">
 
-        {% if relations == [] %}
+        {% if relations %}
             <h1>Bonjour {{nomUtilisateur}}, voici vos relations :</h1>
 
             {% for relation in relations %}
@@ -40,7 +40,7 @@
             {% endfor %}
 
         {% else %}
-
+            
             <h1>Bonjour {{nomUtilisateur}}</h1>
             <br/>
             <h4>Veuillez ajouter des relations pour pouvoir les consulter.</h4>

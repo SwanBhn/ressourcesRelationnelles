@@ -43,14 +43,7 @@ class RelationsController extends AbstractController
             $nom = $currentUser ? $currentUser->getNom() : null;
 
             $tableau = [];
-            if(is_null($amis)){
-                return $this->render('relations/relations.html.twig', [
-                    'relations' => $tableau,
-                    'nomUtilisateur' => $nom,
-                    'erreur' => "Ajoutez des personnes à vos relations!"
-                ]);
-            }
-            else{
+            if(!is_null($amis)){
                 foreach ($amis as $ami) {
                     $amiId = $ami->getIdUtilisateurAmi()->getId();
                     if($amiId == $userId){
@@ -73,12 +66,12 @@ class RelationsController extends AbstractController
                         ];
                     }
                 }
-
-                return $this->render('relations/relations.html.twig', [
-                    'relations' => $tableau,
-                    'nomUtilisateur' => $nom
-                ]);
             }
+
+            return $this->render('relations/relations.html.twig', [
+                'relations' => $tableau,
+                'nomUtilisateur' => $nom
+            ]);
         }
     }
 
