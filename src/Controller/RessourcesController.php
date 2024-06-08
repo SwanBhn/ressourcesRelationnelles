@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\Ressources;
 use App\Entity\User;
 use App\Entity\Commentaires;
+use App\Entity\Enregistrer;
 use App\Repository\RessourcesRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface; 
@@ -63,6 +64,8 @@ class RessourcesController extends AbstractController
     #[Route('/ressource/{id}', name: 'app_detailressources')]
     public function getRessource(EntityManagerInterface $entityManager, $id)
     {
+        $estEnregistrer = false;
+        
         $user = $this->getUser();
 
         $ressource = $entityManager->getRepository(Ressources::class)->find($id);
@@ -94,13 +97,20 @@ class RessourcesController extends AbstractController
             else{
                 //Ressource avec connexion
                 $utilisateur = $entityManager->getRepository(User::class)->find($userId);
+
+                $enregistrement = $entityManager->getRepository(Enregistrer::class)->findOneBy(['idUtilisateur' => $userId, 'idRessource' => $id]);
+
+                if(!is_null($enregistrement)){
+                    $estEnregistrer = true;
+                }
             }
         }
                    
         return $this->render('ressources/detailRessource.html.twig', [
             'ressource' => $ressource,
             'utilisateur' => $utilisateur,
-            'commentaires' => $commentairesTab
+            'commentaires' => $commentairesTab,
+            'estEnregistrer' => $estEnregistrer 
         ]);
     }
 

@@ -22,9 +22,7 @@
                 <th scope="col">Multimedia</th>
                 <th scope="col">Categorie</th>
                 <th scope="col">Participants</th>
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <th scope="col">Actions</th>
-                {% endif %}
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -36,18 +34,16 @@
                 <td><img src="{{ ressource.multimedia }}" style="width:200px"/></td>
                 <td>{{ ressource.idCategorie.nom }}</td>
                 <td>{{ ressource.idUtilisateur.nom }}</td>
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <td>
-                        {% if utilisateurId == ressource.idUtilisateur.id %}
-                            <form method="delete" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                            </form>
-                        {% endif %}
-                        <a href="{{path('app_detailressources', {'id' : ressource.id}) }}">
-                            <button class="btn btn-primary">Consulter</button>
-                        </a>
-                    </td>
-                {% endif %}
+                <td>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') and (utilisateurId == ressource.idUtilisateur.id) %}
+                        <form method="delete" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                    <a href="{{path('app_detailressources', {'id' : ressource.id}) }}">
+                        <button class="btn btn-primary">Consulter</button>
+                    </a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

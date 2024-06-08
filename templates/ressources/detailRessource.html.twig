@@ -138,9 +138,19 @@
 
 <div class="comment-section">
     {# Boutons favoris #}
-    <input type="button" value="Ajouter en favoris" class="favoris">
-    <input type="button" value="Retirer des favoris" class="favoris-remove">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if estEnregistrer %}
+            <form method="delete" action="{{ path('app_delete_favoris', {'id': ressource.id}) }}">
+                <button type="submit" class="favoris-remove">Retirer des favoris</button>
+            </form>
+        {% else %}
+            <form method="post" action="{{ path('app_add_favoris', {'id': ressource.id}) }}">
+                <button type="submit" class="favoris">Ajouter des favoris</button>
+            </form>
+        {% endif %}
+    {% endif %}
 
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     {# Ajouter commentaire #}
     <h2 class="comment-count">{{ commentaires|length }} Commentaires</h2>
     <form class="comment-form" action="" method="post" style="margin-bottom:20px">
@@ -149,6 +159,7 @@
         <input type="submit" class="cancel-command" onclick="clearComment()" value="Annuler" style="margin-right:10px;">
         <input type="submit" class="send" id="submit-button" value="Envoyer" disabled>
     </form>
+    {% endif %}
 
     {# Section commentaire #}
     {% for commentaire in commentaires %}
