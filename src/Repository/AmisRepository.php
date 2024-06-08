@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Amis;
-use App\Entity\Utilisateurs;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +31,7 @@ class AmisRepository extends ServiceEntityRepository
         $queryBuilder
             ->select('a')
             ->from(Amis::class, 'a')
-            ->innerJoin(Utilisateurs::class, 'u', 'WITH', 'a.idUtilisateur = u.id')
+            ->innerJoin(User::class, 'u', 'WITH', 'a.idUtilisateur = u.id')
             ->where('a.idUtilisateur = :userId OR a.idUtilisateurAmi = :userId')
             ->setParameter('userId', $userId)
             ->orderBy('u.nom', 'ASC');

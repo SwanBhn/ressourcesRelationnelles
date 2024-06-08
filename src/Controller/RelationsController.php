@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Amis;
-use App\Entity\Utilisateurs;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,97 +20,134 @@ class RelationsController extends AbstractController
         $this->amisRepository = $amisRepository;
     }
 
-    #[Route('/Relations', name: 'app_getRelations')]
+    #[Route('/relations', name: 'app_getRelations')]
     public function relations(EntityManagerInterface $entityManager): Response
     {
-        //TODO: Modifier pour recuperer l'id de l'utilisateur connecté
-        $userId = 1;
+        $user = $this->getUser();
 
-        if (!$userId) {
-            //TODO: Créer la page d'erreur pour cette route => return $this->redirectToRoute('app_Error');
-            throw new Exception('Erreur lors de la récupération de votre compte');
+        if(is_null($user)){
+            //Redirige sur la page d'inscription
+            return $this->redirectToRoute('app_register');
         }
+        else{
+            $userId = $user->getId();
 
-        $amis = $entityManager->getRepository(Amis::class)->findBy(['idUtilisateur' => $userId]);
-        
-        $tableau = [];
-        foreach ($amis as $ami) {
-            $tableau[] = [
-                'idUtilisateur' => $ami->getIdUtilisateur(),
-                'imageAmi' => $ami->getIdUtilisateurAmi()->getPhoto(),
-                'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
-                'nomAmi' => $ami->getIdUtilisateurAmi()->getNom(),
-                'descriptionAmi' => $ami->getIdUtilisateurAmi()->getDescription()
-            ];
-        }
-
-        $currentUser = $entityManager->getRepository(Utilisateurs::class)->find($userId);
-        $nom = $currentUser ? $currentUser->getNom() : null;
-
-        return $this->render('relations/relations.html.twig', [
-            'relations' => $tableau,
-            'nomUtilisateur' => $nom
-        ]);
-    }
-
-    #[Route('/SupprimerRelation/{idAmis}', name: 'app_deleteRelation')]
-    public function deleteRelation(EntityManagerInterface $entityManager, $idAmis): Response
-    {
-        //TODO: Cf L18
-        $userId = 1;
-
-        if (is_null($userId)) {
-            throw new Exception('Erreur lors de la récupération de votre compte');
-        }
-        else
-        {
-            $currentUser = $entityManager->getRepository(Utilisateurs::class)->findOneBy(['id' => $userId]);
-            if(is_null($currentUser)){
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
-        }
 
-        $deleteAmis = $entityManager->getRepository(Amis::class)
-            ->findOneBy([
-                'idUtilisateur' => $userId,
-                'idUtilisateurAmi' => $idAmis
-            ]);
+            $amis = $this->amisRepository->findFriendsByUserId($userId);
 
-        if ($deleteAmis) {
-            $entityManager->remove($deleteAmis);
-            $entityManager->flush();
+            $currentUser = $entityManager->getRepository(User::class)->find($userId);
+            $nom = $currentUser ? $currentUser->getNom() : null;
+
+            $tableau = [];
+            if(is_null($amis)){
+                return $this->render('relations/relations.html.twig', [
+                    'relations' => $tableau,
+                    'nomUtilisateur' => $nom,
+                    'erreur' => "Ajoutez des personnes à vos relations!"
+                ]);
+            }
+            else{
+                foreach ($amis as $ami) {
+                    $amiId = $ami->getIdUtilisateurAmi()->getId();
+                    if($amiId == $userId){
+                        $tableau[] = [
+                            'idUtilisateur' => $ami->getIdUtilisateurAmi()->getId(),
+                            'imageAmi' => $ami->getIdUtilisateur()->getPhoto(),
+                            'idAmi' => $ami->getIdUtilisateur()->getId(),
+                            'nomAmi' => $ami->getIdUtilisateur()->getNom(),
+                            'descriptionAmi' => $ami->getIdUtilisateur()->getDescription()
+                        ];
+                    }
+                    else
+                    {
+                        $tableau[] = [
+                            'idUtilisateur' => $ami->getIdUtilisateur()->getId(),
+                            'imageAmi' => $ami->getIdUtilisateurAmi()->getPhoto(),
+                            'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
+                            'nomAmi' => $ami->getIdUtilisateurAmi()->getNom(),
+                            'descriptionAmi' => $ami->getIdUtilisateurAmi()->getDescription()
+                        ];
+                    }
+                }
+
+                return $this->render('relations/relations.html.twig', [
+                    'relations' => $tableau,
+                    'nomUtilisateur' => $nom
+                ]);
+            }
         }
-        
-        return $this->redirectToRoute('app_getRelations');
     }
 
-    #[Route('/AjouterRelation/{idAmis}', name: 'app_postRelation')]
+    #[Route('/supprimerRelation/{idAmis}', name: 'app_deleteRelation')]
+    public function deleteRelation(EntityManagerInterface $entityManager, $idAmis): Response
+    {
+        $user = $this->getUser();
+
+        if(is_null($user)){
+            //Redirige sur la page d'inscription
+            return $this->redirectToRoute('app_register');
+        }
+        else{
+            $userId = $user->getId();
+
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
+                throw new Exception('Erreur lors de la récupération de votre compte');
+            }
+
+            $deleteAmis = $entityManager->getRepository(Amis::class)
+                ->findOneBy([
+                    'idUtilisateur' => $userId,
+                    'idUtilisateurAmi' => $idAmis
+                ]);
+
+            if ($deleteAmis) {
+                $entityManager->remove($deleteAmis);
+                $entityManager->flush();
+            }
+            
+            return $this->redirectToRoute('app_getRelations');
+        }
+    }
+
+    #[Route('/ajouterRelation/{idAmis}', name: 'app_postRelation')]
     public function postRelation(EntityManagerInterface $entityManager, $idAmis): Response
     {
-        //TODO: Cf L18
-        $userId = 1;
+        $user = $this->getUser();
 
-        if (is_null($userId)) {
-            throw new Exception('Erreur lors de la récupération de votre compte');        }
-        else
-        {
-            $currentUser = $entityManager->getRepository(Utilisateurs::class)->findOneBy(['id' => $userId]);
-            if(is_null($currentUser)){
-                throw new Exception('Erreur lors de la récupération de votre compte');            }
+        if(is_null($user)){
+            //Redirige sur la page d'inscription
+            return $this->redirectToRoute('app_register');
         }
-        
-        $newFriend = $entityManager->getRepository(Utilisateurs::class)->findOneBy(['id' => $idAmis]);
-        $addAmis = new Amis();
-        $addAmis->setIdUtilisateur($currentUser);
-        $addAmis->setIdUtilisateurAmi($newFriend);
+        else{
+            $userId = $user->getId();
 
-        //Ajout de la relation
-        $entityManager->persist($addAmis);
-        $entityManager->flush();
-        
-        //TODO: Changer la redirection vers le profil de l'utilisateur ajouté
-        return $this->redirectToRoute('app_getRelations');
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
+                throw new Exception('Erreur lors de la récupération de votre compte');
+            }
+
+            $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
+            
+            $newFriend = $entityManager->getRepository(User::class)->findOneBy(['id' => $idAmis]);
+            $addAmis = new Amis();
+            $addAmis->setIdUtilisateur($currentUser);
+            $addAmis->setIdUtilisateurAmi($newFriend);
+
+            //Ajout de la relation
+            $entityManager->persist($addAmis);
+            $entityManager->flush();
+            
+            //TODO: Changer la redirection vers le profil de l'utilisateur ajouté
+            return $this->redirectToRoute('app_getRelations');
+        }
     }
+    
+    //----- Api -----//
 
     #[Route('/api/relations/{userId}', name: 'app_api_getRelations', methods: ['GET'])]
     public function getRelationsApi(EntityManagerInterface $entityManager, int $userId): Response
@@ -120,7 +157,7 @@ class RelationsController extends AbstractController
         }
         else
         {
-            $currentUser = $entityManager->getRepository(Utilisateurs::class)->findOneBy(['id' => $userId]);
+            $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
             if(is_null($currentUser)){
                 return new JsonResponse(['message' => 'Erreur lors de la récupération de votre compte'], Response::HTTP_NOT_FOUND);
             }
@@ -167,7 +204,7 @@ class RelationsController extends AbstractController
         }
         else
         {
-            $currentUser = $entityManager->getRepository(Utilisateurs::class)->findOneBy(['id' => $userId]);
+            $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
             if(is_null($currentUser)){
                 return new Response('', Response::HTTP_NOT_FOUND);
             }

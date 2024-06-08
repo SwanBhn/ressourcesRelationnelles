@@ -22,11 +22,11 @@ class Messages
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(name:"idUtilisateurEnvoie", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
-    private ?Utilisateurs $idUtilisateurEnvoie = null;
+    private ?User $idUtilisateurEnvoie = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(name:"idUtilisateurRecois", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
-    private ?Utilisateurs $idUtilisateurRecois = null;
+    private ?User $idUtilisateurRecois = null;
 
     public function getId(): ?int
     {
@@ -57,24 +57,24 @@ class Messages
         return $this;
     }
 
-    public function getIdUtilisateurEnvoie(): ?Utilisateurs
+    public function getIdUtilisateurEnvoie(): ?User
     {
         return $this->idUtilisateurEnvoie;
     }
 
-    public function setIdUtilisateurEnvoie(?Utilisateurs $idUtilisateurEnvoie): static
+    public function setIdUtilisateurEnvoie(?User $idUtilisateurEnvoie): static
     {
         $this->idUtilisateurEnvoie = $idUtilisateurEnvoie;
 
         return $this;
     }
 
-    public function getIdUtilisateurRecois(): ?Utilisateurs
+    public function getIdUtilisateurRecois(): ?User
     {
         return $this->idUtilisateurRecois;
     }
 
-    public function setIdUtilisateurRecois(?Utilisateurs $idUtilisateurRecois): static
+    public function setIdUtilisateurRecois(?User $idUtilisateurRecois): static
     {
         $this->idUtilisateurRecois = $idUtilisateurRecois;
 

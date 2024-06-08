@@ -14,38 +14,38 @@ class Amis
     // private ?int $id = null;
 
     #[ORM\Id]
-    #[ORM\ManyToOne(inversedBy: 'utilisateur')]
+    #[ORM\ManyToOne(inversedBy: 'user')]
     #[ORM\JoinColumn(name:"idUtilisateur", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
-    private ?Utilisateurs $idUtilisateur = null;
+    private ?User $idUtilisateur = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'ami')]
     #[ORM\JoinColumn(name:"idUtilisateurAmi", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
-    private ?Utilisateurs $idUtilisateurAmi = null;
+    private ?User $idUtilisateurAmi = null;
 
     // public function getId(): ?int
     // {
     //     return $this->id;
     // }
 
-    public function getIdUtilisateur(): ?Utilisateurs
+    public function getIdUtilisateur(): ?User
     {
         return $this->idUtilisateur;
     }
 
-    public function setIdUtilisateur(?Utilisateurs $idUtilisateur): static
+    public function setIdUtilisateur(?User $idUtilisateur): static
     {
         $this->idUtilisateur = $idUtilisateur;
 
         return $this;
     }
 
-    public function getIdUtilisateurAmi(): ?Utilisateurs
+    public function getIdUtilisateurAmi(): ?User
     {
         return $this->idUtilisateurAmi;
     }
 
-    public function setIdUtilisateurAmi(?Utilisateurs $idUtilisateurAmi): static
+    public function setIdUtilisateurAmi(?User $idUtilisateurAmi): static
     {
         $this->idUtilisateurAmi = $idUtilisateurAmi;
 

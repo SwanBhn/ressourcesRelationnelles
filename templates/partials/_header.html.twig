@@ -14,9 +14,17 @@
           </div>
           <div class="menu-items">
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <li><a href="{{ path('app_getRelations') }}">Relations</a></li>
-            <li><a href="{{path ('app_ressources')}}">Ressources</a></li>
-            <li><a href="{{path ('app_profil')}}">Mon Profil</a></li>
+            {% endif %}
+            <li><a href="{{ path('app_ressources')}}">Ressources</a></li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+              <li><a href="{{ path('app_profil')}}">Mon Profil</a></li>
+              <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+            {% else %}
+              <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+              <li><a href="{{ path('app_register') }}">Créer un compte</a></li>
+            {% endif %}
           </div>
         </div>
       </div>

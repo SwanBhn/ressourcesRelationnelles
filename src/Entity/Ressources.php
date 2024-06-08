@@ -48,7 +48,7 @@ class Ressources
 
     #[ORM\ManyToOne(inversedBy: 'ressources')]
     #[ORM\JoinColumn(name:"idUtilisateur", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
-    private ?Utilisateurs $idUtilisateur = null;
+    private ?User $idUtilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'ressources')]
     #[ORM\JoinColumn(name:"idCategorie", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
@@ -203,12 +203,12 @@ class Ressources
         return $this;
     }
 
-    public function getIdUtilisateur(): ?Utilisateurs
+    public function getIdUtilisateur(): ?User
     {
         return $this->idUtilisateur;
     }
 
-    public function setIdUtilisateur(?Utilisateurs $idUtilisateur): static
+    public function setIdUtilisateur(?User $idUtilisateur): static
     {
         $this->idUtilisateur = $idUtilisateur;
 

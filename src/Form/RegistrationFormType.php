@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -17,13 +18,50 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            
+            ->add('nom', TextType::class, array(
+                'label' => false,
+                'attr' => array(
+                    'placeholder' => 'Nom d\'utilisateur',
+                    'class' => 'form-control'
+                )
+           ))
+            ->add('description', TextType::class, array(
+                'label' => false,
+                'required' => false,
+                'empty_data'  => '',
+                'attr' => array(
+                    'placeholder' => 'Description',
+                    'class' => 'form-control'
+                )
+           ))
+            ->add('email', TextType::class, array(
+                'label' => false,
+                'attr' => array(
+                    'placeholder' => 'Email',
+                    'class' => 'form-control'
+                )
+           ))
+            ->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'Accepter les conditions d\'utilisation',
+                'attr' => [
+                    'class' => 'tinymce',
+                ],
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'You should agree to our terms.',
+                    ]),
+                ],
+            ])
             ->add('plainPassword', PasswordType::class, [
                                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'placeholder' => 'Mot de passe',
+                    'class' => 'form-control'
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
@@ -35,6 +73,7 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'label' => false
             ])
         ;
     }
