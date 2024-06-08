@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>Profil de Mon Nom ✅</h1>
+    <h2>Mes informations personnelles :</h2>
+    <form id="profile-form" style="margin-bottom:20px">
+        <div class="form-group">
+            <label for="name">Nom:</label>
+            <input type="text" id="name" name="name" value="Mon Nom">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="monmail@mail.com">
+        </div>
+        <button type="button" id="save-button" class="save-button">Enregistrer</button>
+    </form>
+    <h2>Mes favoris :</h2>
+    <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Titre</th>
+        <th scope="col">Contenu</th>
+        <th scope="col">DateCreation</th>
+        <th scope="col">Multimedia</th>
+        <th scope="col">Categorie</th>
+        <th scope="col">Participants</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <th scope="row">ressource id</th>
+          <td><a>ressource.titre</a></td>
+          <td>ressource.contenu</td>
+          <td>ressource.dateCreation|date('Y-m-d')</td>
+          <td><img style="width:200px"/></td>
+          <td>ressource.idCategorie.nom</td>
+          <td>ressource.idUtilisateur.nom</td> 
+            
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock %}

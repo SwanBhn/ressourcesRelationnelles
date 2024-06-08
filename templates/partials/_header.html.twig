@@ -1,23 +1,46 @@
 <nav>
       <div class="navbar">
         <div class="container nav-container">
-            <input class="checkbox" type="checkbox" name="" id="" />
+            <input class="checkbox" type="checkbox" name="" />
             <div class="hamburger-lines">
               <span class="line line1"></span>
               <span class="line line2"></span>
               <span class="line line3"></span>
             </div>  
           <div class="logo">
-            <a  href="{{path ('app_accueil')}}"><img src="{{asset ('../imgs/logoCiviLink.png')}}" alt="Logo"/></a>
+            <a  href="{{path ('app_accueil')}}"><img src="{{asset ('../imgs/favicon.png')}}" alt="Logo"/></a>
           <span class="civilink">CiviLink</span>
                        
           </div>
           <div class="menu-items">
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <li><a href="{{ path('app_getRelations') }}">Relations</a></li>
-            <li><a href="{{path ('app_ressources')}}">Ressources</a></li>
-            <li><a href="#">Mon Profil</a></li>
+            {% endif %}
+            <li><a href="{{ path('app_ressources')}}">Ressources</a></li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+              <li><a href="{{ path('app_profil')}}">Mon Profil</a></li>
+              <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+            {% else %}
+              <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+              <li><a href="{{ path('app_register') }}">Créer un compte</a></li>
+            {% endif %}
           </div>
         </div>
       </div>
     </nav>
+
+    <script>
+     menuToggle = document.querySelector('.nav-container input[type="checkbox"]');
+  var body = document.body;
+  if (menuToggle) {
+    menuToggle.addEventListener('change', function() {
+      if (menuToggle.checked) {
+        body.classList.add('body-no-overflow');
+      }
+      else {
+        body.classList.remove('body-no-overflow');
+      }
+    })
+  }
+    </script>

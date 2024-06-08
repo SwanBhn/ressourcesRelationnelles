@@ -123,12 +123,10 @@ body{
   padding-top: 120px;
   box-shadow: inset 0 0 2000px #ffffff;
   height: 100vh;
-  width: 100%;
+  width: 150%;
   transform: translate(-150%);
   display: flex;
   flex-direction: column;
-  margin-left: -40px;
-  padding-left: 50px;
   transition: transform 0.5s ease-in-out;
   text-align: center;
   background-color: #ffffff;
@@ -150,15 +148,18 @@ body{
 .civilink {
   position: absolute;
   top: 15px;
-  right: -50px;
   color: #0e2431;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 .logo img{
   width: 60px;
   padding: 0;
   margin-left: 5px;
+}
+
+.body-no-overflow {
+  overflow: hidden;
 }
 
 .nav-container input[type="checkbox"]:checked ~ .menu-items {
@@ -200,6 +201,22 @@ body{
 
 .profile-button:hover {
   background-color: #0069d9;
+}
+
+/* CSS Relation */
+.save-button {
+  background-color: #05af21;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.save-button:hover {
+  background-color: #058d1c;
 }
 
 .unfollow-button {
@@ -252,5 +269,51 @@ body{
   margin: 5px 0 0 0;
   font-size: 14px;
   color: #666;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-buttons {
+  margin-top: 20px;
+}
+
+.form-buttons button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-buttons #edit-button {
+  background-color: #007bff;
+  color: white;
+  margin-right: 10px;
+}
+
+.form-buttons #save-button {
+  background-color: #28a745;
+  color: white;
+  display: none;
+}
+
+.form-buttons button:hover {
+  opacity: 0.8;
 }
 /* Fin CSS Relation */

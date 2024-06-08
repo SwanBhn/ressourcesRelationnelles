@@ -17,7 +17,7 @@ class Partage
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'partages')]
     #[ORM\JoinColumn(name:"idUtilisateur", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
-    private ?Utilisateurs $idUtilisateur = null;
+    private ?User $idUtilisateur = null;
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'partages')]
@@ -32,12 +32,12 @@ class Partage
     //     return $this->id;
     // }
 
-    public function getIdUtilisateur(): ?Utilisateurs
+    public function getIdUtilisateur(): ?User
     {
         return $this->idUtilisateur;
     }
 
-    public function setIdUtilisateur(?Utilisateurs $idUtilisateur): static
+    public function setIdUtilisateur(?User $idUtilisateur): static
     {
         $this->idUtilisateur = $idUtilisateur;
 
