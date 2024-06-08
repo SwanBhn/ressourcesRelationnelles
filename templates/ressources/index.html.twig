@@ -3,35 +3,47 @@
 {% block title %}Ressources{% endblock %}
 
 {% block body %}
-
 <div class="tableRessources">
+
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ type }}">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
 
     <h1>Ressources</h1>
 
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-        <th scope="col">Titre</th>
-        <th scope="col">Contenu</th>
-        <th scope="col">DateCreation</th>
-        <th scope="col">Multimedia</th>
-        <th scope="col">Categorie</th>
-        <th scope="col">Participants</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for ressource in ressources %}
-        <tr>
-          <td>{{ ressource.titre }}</td>
-          <td>{{ ressource.contenu }}</td>
-          <td>{{ ressource.dateCreation|date('d-m-Y') }}</td>
-          <td>{{ ressource.multimedia }}</td>
-          <td>{{ ressource.idCategorie.nom }}</td>
-          <td>{{ressource.idUtilisateur.nom}}</td> 
-            
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Contenu</th>
+                <th scope="col">DateCreation</th>
+                <th scope="col">Multimedia</th>
+                <th scope="col">Categorie</th>
+                <th scope="col">Participants</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ressource in ressources %}
+            <tr>
+                <th scope="row">{{ ressource.id }}</th>
+                <td>{{ ressource.titre }}</td>
+                <td>{{ ressource.contenu }}</td>
+                <td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
+                <td>{{ ressource.multimedia }}</td>
+                <td>{{ ressource.idCategorie.nom }}</td>
+                <td>{{ ressource.idUtilisateur.nom }}</td>
+                <td>
+                    <form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

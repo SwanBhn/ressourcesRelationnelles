@@ -3,11 +3,13 @@
 namespace App\Controller;
 use App\Entity\Ressources;
 use App\Repository\RessourcesRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface; 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\Persistence\ManagerRegistry;
 
 class RessourcesController extends AbstractController
 {
@@ -21,6 +23,23 @@ class RessourcesController extends AbstractController
             'ressources' => $ressources]);
     }
 
+    #[Route('/ressources/supprimer/{id}', name: 'app_supprimer_ressource', methods: ['POST'])]
+    public function supprimerRessource($id, RessourcesRepository $repository, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $ressource = $repository->find($id);
+
+        if (!$ressource) {
+            $errorMessage = 'La ressource avec l\'identifiant ' . $id . ' n\'existe pas.';
+            $this->addFlash('error', $errorMessage);
+        } else {
+            $entityManager->remove($ressource);
+            $entityManager->flush();
+            $this->addFlash('success', 'La ressource a été supprimée avec succès.');
+        }
+
+        return $this->redirectToRoute('app_ressources');
+    }
+  
     #[Route('/ressource/{id}', name: 'app_detailressources')]
     public function indexparId(RessourcesRepository $repository, $id)
     {
@@ -31,7 +50,7 @@ class RessourcesController extends AbstractController
             'ressource' => $ressource]);
     }
 
-    //API
+    //----- API -----//
 
     #[Route('/api/ressources', name: 'app_api_ressources', methods: ['GET'])]
     public function getRessourcesApi(ManagerRegistry $doctrine): Response
@@ -93,5 +112,4 @@ class RessourcesController extends AbstractController
             return new JsonResponse(['message' => 'La ressource est introuvable!'], Response::HTTP_NOT_FOUND);
         }
     }
-   
 }
