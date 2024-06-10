@@ -7,4 +7,19 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+
+menuToggle = document.querySelector('.nav-container input[type="checkbox"]');
+var btnGroup = document.querySelectorAll('.btn-group');
+if (menuToggle) {
+    menuToggle.addEventListener('change', function() {
+        if (menuToggle.checked) {
+            btnGroup.forEach(function(btn) {
+                btn.classList.add('hidden');
+            });
+        } else {
+            btnGroup.forEach(function(btn) {
+                btn.classList.remove('hidden');
+            });
+        }
+    });
+}

@@ -38,7 +38,7 @@
 					<td>{{ ressource.titre }}</td>
 					<td>{{ ressource.contenu }}</td>
 					<td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
-					<td><img src="{{ ressource.multimedia }}" style="width:200px"/></td>
+					<td><img src="{{ ressource.multimedia }}" style="width:50px"/></td>
 					<td>{{ ressource.idCategorie.nom }}</td>
 					<td>{{ ressource.idUtilisateur.nom }}</td>
 					<td class="btn-group">
@@ -69,27 +69,5 @@
 </tbody>
 </table>
 </div>
-<script>
-     menuToggle = document.querySelector('.nav-container input[type="checkbox"]');
-var btnGroup = document.querySelectorAll('.btn-group');
-if (menuToggle) {
-    menuToggle.addEventListener('change', function() {
-        if (menuToggle.checked) {
-            btnGroup.forEach(function(btn) {
-                btn.classList.add('hidden');
-            });
-        } else {
-            btnGroup.forEach(function(btn) {
-                btn.classList.remove('hidden');
-            });
-        }
-    });
-}
-</script>
-<style>
-.hidden {
-  display: none;
-}
 
-</style>
 {% endblock %}
