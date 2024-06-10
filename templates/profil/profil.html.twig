@@ -1,59 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil{% endblock %}
+{% block title %}Profil
+{% endblock %}
 
 {% block body %}
+	<div class="example-wrapper">
+		<h1>Profil de
+			{{ nomUtilisateur }}</h1>
+		<h2>Mes informations personnelles :</h2>
+		<form id="profile-form" style="margin-bottom:20px">
+			<div class="form-group">
+				<label for="name">Nom:</label>
+				<input type="text" id="name" name="name" value="{{ nomUtilisateur }}">
+			</div>
+			<div class="form-group">
+				<label for="email">Email:</label>
+				<input type="email" id="email" name="email" value="{{ emailUtilisateur }}">
+			</div>
+			<button type="button" id="save-button" class="save-button">Enregistrer</button>
+		</form>
+		<h2>Mes favoris :</h2>
+		{% if ressources is empty %}
+			<p>Vous n'avez aucun favori.</p>
+		{% else %}
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Titre</th>
+						<th scope="col">Contenu</th>
+						<th scope="col">Date de Création</th>
+						<th scope="col">Multimedia</th>
+						<th scope="col">Catégorie</th>
+						<th scope="col">Utilisateur</th>
+						<th scope="col">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for ressource in ressources %}
+						<tr>
+							<td>{{ ressource.titre }}</td>
+							<td>{{ ressource.contenu }}</td>
+							<td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
+							<td>
+								{% if ressource.multimedia %}
+									<img src="{{ ressource.multimedia }}" alt="Multimedia" style="width:200px"/>
+								{% else %}
+									Pas de multimedia
+								{% endif %}
+							</td>
+							<td>{{ ressource.idCategorie.nom }}</td>
+							<td>{{ ressource.idUtilisateur.nom }}</td>
+							<td class="btn-group">
+								{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user and (app.user.id == ressource.idUtilisateur.id) %}
+									<form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
+										<input type="hidden" name="_method" value="DELETE">
+										<button type="submit" class="btn btn-danger btn-sm">
+											<i class="fa-solid fa-trash"></i>
+										</button>
+									</form>
 
-<div class="example-wrapper">
-    <h1>Profil de {{nomUtilisateur}}</h1>
-    <h2>Mes informations personnelles :</h2>
-    <form id="profile-form" style="margin-bottom:20px">
-        <div class="form-group">
-            <label for="name">Nom:</label>
-            <input type="text" id="name" name="name" value={{nomUtilisateur}}>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value={{emailUtilisateur}}>
-        </div>
-        <button type="button" id="save-button" class="save-button">Enregistrer</button>
-    </form>
-    <h2>Mes favoris :</h2>
-    {% if ressources is empty %}
-    <p>Vous n'avez aucun favori.</p>
-{% else %}
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Titre</th>
-                <th scope="col">Contenu</th>
-                <th scope="col">Date de Création</th>
-                <th scope="col">Multimedia</th>
-                <th scope="col">Catégorie</th>
-                <th scope="col">Utilisateur</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ressource in ressources %}
-                <tr>
-                    <td>{{ ressource.titre }}</td>
-                    <td>{{ ressource.contenu }}</td>
-                    <td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
-                    <td>
-                        {% if ressource.multimedia %}
-                            <img src="{{ ressource.multimedia }}" alt="Multimedia" style="width:200px"/>
-                        {% else %}
-                            Pas de multimedia
-                        {% endif %}
-                    </td>
-                    <td>{{ ressource.idCategorie.nom }}</td>
-                    <td>{{ ressource.idUtilisateur.nom }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
-</div>
-
-
+									<a href="{{ path('app_editer_ressource', {'id': ressource.id, 'redirect_to': 'app_profil'}) }}" class="btn btn-warning btn-sm">
+										<i class="fa-solid fa-pen-to-square"></i>
+									</a>
+								{% endif %}
+								<a href="{{ path('app_detailressources', {'id': ressource.id}) }}" class="btn btn-primary btn-sm">
+									<i class="fa-solid fa-eye"></i>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
 {% endblock %}
