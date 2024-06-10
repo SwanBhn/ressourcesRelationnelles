@@ -38,7 +38,7 @@
             {% for ressource in ressources %}
                 <tr>
                     <th scope="row">{{ ressource.id }}</th>
-                    <td><a href="#">{{ ressource.titre }}</a></td>
+                    <td>{{ ressource.titre }}</td>
                     <td>{{ ressource.contenu }}</td>
                     <td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
                     <td>
