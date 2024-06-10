@@ -9,6 +9,8 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Ressources;
 use App\Entity\Enregistrer;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ProfilController extends AbstractController
 {
@@ -106,5 +108,24 @@ class ProfilController extends AbstractController
         }
 
         return new JsonResponse($result);
+    }
+
+    #[Route('/api/user/update', name: 'app_user_update', methods: ['PUT'])]
+    public function updateUser(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['message' => 'Utilisateur non trouvé!'], Response::HTTP_NOT_FOUND);
+        }
+
+        $user->setNom($data['name']);
+        $user->setEmail($data['email']);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Informations mises à jour avec succès!']);
     }
 }
