@@ -49,7 +49,7 @@
 								</button>
 							</form>
 
-							<a href="{{ path('app_editer_ressource', {'id': ressource.id}) }}" class="btn btn-warning btn-sm">
+							<a href="{{ path('app_editer_ressource', {'id': ressource.id, 'redirect_to': 'app_ressources'}) }}" class="btn btn-warning btn-sm">
 								<i class="fa-solid fa-pen-to-square"></i>
 							</a>
 						{% endif %}
