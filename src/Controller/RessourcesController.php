@@ -6,6 +6,7 @@ use App\Entity\Commentaires;
 use App\Entity\Enregistrer;
 use App\Entity\Ressources;
 use App\Entity\User;
+use App\Entity\Amis;
 use App\Form\RessourcePostFormType;
 use App\Form\RessourcePutFormType;
 use App\Repository\RessourcesRepository;
@@ -134,6 +135,7 @@ class RessourcesController extends AbstractController
     public function getRessource(EntityManagerInterface $entityManager, $id)
     {
         $estEnregistrer = false;
+        $estAmi = false;
 
         $user = $this->getUser();
 
@@ -159,6 +161,7 @@ class RessourcesController extends AbstractController
         }
         else{
             $userId = $user->getId();
+            $idAmis = $ressource->getIdUtilisateur()->getId();
 
             if(is_null($userId)){
                 //TODO: rediriger sur la page d'erreur
@@ -170,8 +173,19 @@ class RessourcesController extends AbstractController
 
                 $enregistrement = $entityManager->getRepository(Enregistrer::class)->findOneBy(['idUtilisateur' => $userId, 'idRessource' => $id]);
 
+                $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
+        
+                $newFriend = $entityManager->getRepository(User::class)->findOneBy(['id' => $idAmis]);
+        
+                // Vérification si l'utilisateur est déjà en relation avec l'ami
+                $existingRelation = $entityManager->getRepository(Amis::class)->findOneBy(['idUtilisateur' => $currentUser,'idUtilisateurAmi' => $newFriend]);
+
                 if(!is_null($enregistrement)){
                     $estEnregistrer = true;
+                }
+
+                if(!is_null($existingRelation)){
+                    $estAmi = true;
                 }
             }
         }
@@ -180,7 +194,8 @@ class RessourcesController extends AbstractController
             'ressource' => $ressource,
             'utilisateur' => $utilisateur,
             'commentaires' => $commentairesTab,
-            'estEnregistrer' => $estEnregistrer 
+            'estEnregistrer' => $estEnregistrer,
+            'estAmi' => $estAmi 
         ]);
     }
 

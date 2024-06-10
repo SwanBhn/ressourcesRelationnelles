@@ -135,9 +135,17 @@
     <h1>Titre : {{ ressource.titre }}</h1>
     <img src="{{ ressource.multimedia }}" style="width:500px"/>
     <h4>Contenu : {{ ressource.contenu }}</h4>
-    <form action="{{ path('app_postRelation', {'idAmis': ressource.idUtilisateur.id}) }}" method="post">
-        <h4>Créer par : {{ ressource.idUtilisateur.nom }} <button type="submit" id="save-button" class="btn btn-success">Suivez {{ ressource.idUtilisateur.nom }} en cliquant ici !</button></h4>
-    </form>
+    <h4>Créer par : {{ ressource.idUtilisateur.nom }} </h4>
+    
+    {% if estAmi %}
+        <form action="{{ path('app_deleteRelation', {'idAmis': ressource.idUtilisateur.id }) }}" method="delete">
+            <button type="warning" id="save-button" class="btn btn-warning">Ne suivez plus {{ ressource.idUtilisateur.nom }} en cliquant ici !</button>
+         </form>
+    {% else %}
+        <form action="{{ path('app_postRelation', {'idAmis': ressource.idUtilisateur.id }) }}" method="post">
+            <button type="submit" id="save-button" class="btn btn-success">Suivez {{ ressource.idUtilisateur.nom }} en cliquant ici !</button>
+        </form>
+    {% endif %}
 <div class="comment-section">
     {# Boutons favoris #}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -154,7 +162,7 @@
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         {# Ajouter commentaire #}
-        <h2 class="comment-count">{{ commentaires|length }} Commentaires</h2>
+        <h2 class="comment-count">{{ commentaires|length }} {{ commentaires|length == 1 ? 'Commentaire' : 'Commentaires' }}</h2>
         <img src={{ utilisateur.photo }} class="rounded-logo" alt="" style="border-radius: 50%; margin-right: 10px; object-fit: cover;">
         <form class="comment-form" action="{{ path('app_add_commentaire', {'id': ressource.id}) }}" method="post" style="margin-bottom:20px">
             <input type="text" name="contenu" id="comment-input" placeholder="Ajoutez un commentaire...">
