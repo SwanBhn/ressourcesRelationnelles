@@ -24,10 +24,10 @@
         <div style="margin-bottom: 20px;">
         {{ form_row(registrationForm.plainPassword) }}
         </div>
+        <a href="{{ path('app_condition') }}">Voir les conditions d'utilisation</a> </br>
         <div style="margin-bottom: 20px;">
         {{ form_row(registrationForm.agreeTerms) }}
         </div>
-
         <button type="submit" id="save-button" class="btn btn-success">Créer son compte</button>
         
     <a href="{{ path('app_login') }}" class="btn btn-primary">Déjà un compte ?</a>
