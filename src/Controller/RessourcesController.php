@@ -85,12 +85,12 @@ class RessourcesController extends AbstractController
         $ressource = $entityManager->getRepository(Ressources::class)->find($id);
 
         $form = $this->createForm(RessourcePutFormType::class, $ressource);
-
+    
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $currentDate = new \DateTime();
             $categorie = $entityManager->getRepository(Categories::class)->find(1);
-
+    
             $ressource->setDateCreation($currentDate);
             $ressource->setEstPubliee(false);
             $ressource->setEstValidee(false);
@@ -100,13 +100,14 @@ class RessourcesController extends AbstractController
             $ressource->setEstDesactivee(false);
             $ressource->setIdUtilisateur($this->getUser());
             $ressource->setIdCategorie($categorie);
-
-            // $entityManager->persist($ressource);
+    
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_ressources');
+    
+            $redirectRoute = $request->query->get('redirect_to', 'app_ressources');
+    
+            return $this->redirectToRoute($redirectRoute);
         }
-
+    
         return $this->render('ressources/editerRessource.html.twig', [
             'ressourcePutForm' => $form->createView(),
         ]);
