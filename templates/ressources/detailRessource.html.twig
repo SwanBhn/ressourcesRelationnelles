@@ -135,7 +135,9 @@
     <h1>Titre : {{ ressource.titre }}</h1>
     <img src="{{ ressource.multimedia }}" style="width:500px"/>
     <h4>Contenu : {{ ressource.contenu }}</h4>
-
+    <form action="{{ path('app_postRelation', {'idAmis': ressource.idUtilisateur.id}) }}" method="post">
+        <h4>Créer par : {{ ressource.idUtilisateur.nom }} <button type="submit" id="save-button" class="btn btn-success">Suivez {{ ressource.idUtilisateur.nom }} en cliquant ici !</button></h4>
+    </form>
 <div class="comment-section">
     {# Boutons favoris #}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
