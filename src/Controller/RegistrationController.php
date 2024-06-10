@@ -42,7 +42,7 @@ class RegistrationController extends AbstractController
             $user->setNom($form->get('nom')->getData());
             $user->setEstDesactive(false);
             $user->setDescription('description');
-
+            $user->setPhoto('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png');
             $entityManager->persist($user);
             $entityManager->flush();
 
