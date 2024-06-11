@@ -18,48 +18,62 @@ class ProfilController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-        $userId = $user->getId();
-        $currentUser = $entityManager->getRepository(User::class)->find($userId);
-        $nom = $currentUser ? $currentUser->getNom() : null;
-        $email = $currentUser ? $currentUser->getEmail() : null;
 
-        $enregistrerRepository = $entityManager->getRepository(Enregistrer::class);
-        $favoris = $enregistrerRepository->findBy(['idUtilisateur' => $userId]);
+        if(is_null($user)){
+            //Redirige sur la page d'inscription
+            return $this->redirectToRoute('app_register');
+        }
+        else{
+            $userId = $user->getId();
 
-        $ressourceRepository = $entityManager->getRepository(Ressources::class);
-        $result = [];
-
-        // Récupérer les détails des ressources favorites
-        foreach ($favoris as $favori) {
-            $ressource = $ressourceRepository->find($favori->getIdRessource());
-            if ($ressource !== null) {
-                $result[] = [
-                    'id' => $ressource->getId(),
-                    'titre' => $ressource->getTitre(),
-                    'contenu' => $ressource->getContenu(),
-                    'dateCreation' => $ressource->getDateCreation(),
-                    'estValidee' => $ressource->isEstValidee(),
-                    'estRestreinte' => $ressource->isEstRestreinte(),
-                    'estExploitee' => $ressource->isEstExploitee(),
-                    'estArchivee' => $ressource->isEstArchivee(),
-                    'estDesactivee' => $ressource->isEstDesactivee(),
-                    'multimedia' => $ressource->getMultimedia(),
-                    'idUtilisateur' => $ressource->getIdUtilisateur(),
-                    'idCategorie' => $ressource->getIdCategorie(),
-                    'commentaires' => $ressource->getCommentaires(),
-                    'partages' => $ressource->getPartages(),
-                    'enregistrers' => $ressource->getEnregistrers(),
-                    'participers' => $ressource->getParticipers(),
-                    'groupesRessources' => $ressource->getGroupesRessources(),
-                ];
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
+                throw new Exception('Erreur lors de la récupération de votre compte');
+            }
+            else{
+                $currentUser = $entityManager->getRepository(User::class)->find($userId);
+                $nom = $currentUser ? $currentUser->getNom() : null;
+                $email = $currentUser ? $currentUser->getEmail() : null;
+        
+                $enregistrerRepository = $entityManager->getRepository(Enregistrer::class);
+                $favoris = $enregistrerRepository->findBy(['idUtilisateur' => $userId]);
+        
+                $ressourceRepository = $entityManager->getRepository(Ressources::class);
+                $result = [];
+        
+                // Récupérer les détails des ressources favorites
+                foreach ($favoris as $favori) {
+                    $ressource = $ressourceRepository->find($favori->getIdRessource());
+                    if ($ressource !== null) {
+                        $result[] = [
+                            'id' => $ressource->getId(),
+                            'titre' => $ressource->getTitre(),
+                            'contenu' => $ressource->getContenu(),
+                            'dateCreation' => $ressource->getDateCreation(),
+                            'estValidee' => $ressource->isEstValidee(),
+                            'estRestreinte' => $ressource->isEstRestreinte(),
+                            'estExploitee' => $ressource->isEstExploitee(),
+                            'estArchivee' => $ressource->isEstArchivee(),
+                            'estDesactivee' => $ressource->isEstDesactivee(),
+                            'multimedia' => $ressource->getMultimedia(),
+                            'idUtilisateur' => $ressource->getIdUtilisateur(),
+                            'idCategorie' => $ressource->getIdCategorie(),
+                            'commentaires' => $ressource->getCommentaires(),
+                            'partages' => $ressource->getPartages(),
+                            'enregistrers' => $ressource->getEnregistrers(),
+                            'participers' => $ressource->getParticipers(),
+                            'groupesRessources' => $ressource->getGroupesRessources(),
+                        ];
+                    }
+                }
+        
+                return $this->render('profil/profil.html.twig', [
+                    'nomUtilisateur' => $nom, 
+                    'emailUtilisateur' => $email,
+                    'ressources' => $result
+                ]);
             }
         }
-
-        return $this->render('profil/profil.html.twig', [
-            'nomUtilisateur' => $nom, 
-            'emailUtilisateur' => $email,
-            'ressources' => $result
-        ]);
     }
 
     //----- Api -----//
