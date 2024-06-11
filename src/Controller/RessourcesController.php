@@ -99,7 +99,6 @@ class RessourcesController extends AbstractController
             $ressource->setEstArchivee(false);
             $ressource->setEstDesactivee(false);
             $ressource->setIdUtilisateur($this->getUser());
-            $ressource->setIdCategorie($categorie);
     
             $entityManager->flush();
     
