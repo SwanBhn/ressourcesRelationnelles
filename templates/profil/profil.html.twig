@@ -55,7 +55,7 @@
                                 </td>
                                 <td>{{ ressource.idCategorie.nom }}</td>
                                 <td>{{ ressource.idUtilisateur.nom }}</td>
-                                <td class="btn-group">
+                                <td>
 								{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user and (app.user.id == ressource.idUtilisateur.id) %}
 									<form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
 										<input type="hidden" name="_method" value="DELETE">
