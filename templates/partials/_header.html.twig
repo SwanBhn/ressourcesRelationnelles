@@ -30,17 +30,21 @@
       </div>
     </nav>
 
+
     <script>
-     menuToggle = document.querySelector('.nav-container input[type="checkbox"]');
+document.addEventListener('DOMContentLoaded', function() {
+  var menuToggle = document.querySelector('.navbar .checkbox');
   var body = document.body;
+
   if (menuToggle) {
     menuToggle.addEventListener('change', function() {
       if (menuToggle.checked) {
         body.classList.add('body-no-overflow');
-      }
-      else {
+      } else {
         body.classList.remove('body-no-overflow');
       }
-    })
+    });
   }
+});
+
     </script>

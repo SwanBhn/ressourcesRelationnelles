@@ -1,142 +1,159 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil{% endblock %}
+{% block title %}Profil
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="mt-5">Profil de {{ nomUtilisateur }}</h1>
-        <h5>Mes informations personnelles :</h5>
-        <form id="profile-form" class="mb-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group mt-2">
-                        <label for="name" class="form-label">Nom:</label>
-                        <input type="text" id="name" name="name" value="{{ nomUtilisateur }}" class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group mt-2">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" id="email" name="email" value="{{ emailUtilisateur }}" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <button type="button" id="save-button" class="btn btn-primary" disabled>Enregistrer</button>
-        </form>
-        <h2>Mes favoris :</h2>
-        {% if ressources is empty %}
-            <p>Vous n'avez aucun favori.</p>
-        {% else %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Titre</th>
-                            <th scope="col">Contenu</th>
-                            <th scope="col">Date de Création</th>
-                            <th scope="col">Multimedia</th>
-                            <th scope="col">Catégorie</th>
-                            <th scope="col">Utilisateur</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ressource in ressources %}
-                            <tr>
-                                <td>{{ ressource.titre }}</td>
-                                <td>{{ ressource.contenu }}</td>
-                                <td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
-                                <td>
-                                    {% if ressource.multimedia %}
-                                        <img src="{{ ressource.multimedia }}" alt="Multimedia" style="max-width: 50px;" class="img-fluid">
-                                    {% else %}
-                                        Pas de multimedia
-                                    {% endif %}
-                                </td>
-                                <td>{{ ressource.idCategorie.nom }}</td>
-                                <td>{{ ressource.idUtilisateur.nom }}</td>
-                                <td>
-								{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user and (app.user.id == ressource.idUtilisateur.id) %}
-									<form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
-										<input type="hidden" name="_method" value="DELETE">
-										<button type="submit" class="btn btn-danger btn-sm">
-											<i class="fa-solid fa-trash"></i>
-										</button>
-									</form>
-
-									<a href="{{ path('app_editer_ressource', {'id': ressource.id, 'redirect_to': 'app_profil'}) }}" class="btn btn-warning btn-sm">
-										<i class="fa-solid fa-pen-to-square"></i>
+	<div class="container">
+		<h1 class="mt-5">Profil de
+			{{ nomUtilisateur }}</h1>
+		<h5>Mes informations personnelles :</h5>
+		<form id="profile-form" class="mb-4">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mt-2">
+						<label for="name" class="form-label">Nom:</label>
+						<input type="text" id="name" name="name" value="{{ nomUtilisateur }}" class="form-control">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mt-2">
+						<label for="email" class="form-label">Email:</label>
+						<input type="email" id="email" name="email" value="{{ emailUtilisateur }}" class="form-control">
+					</div>
+				</div>
+			</div>
+			<button type="button" id="save-button" class="btn btn-primary" disabled>Enregistrer</button>
+		</form>
+		<h2>Mes favoris :</h2>
+		{% if ressources is empty %}
+			<p>Vous n'avez aucun favori.</p>
+		{% else %}
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">Titre</th>
+							<th scope="col">Contenu</th>
+							<th scope="col">Date de Création</th>
+							<th scope="col">Multimedia</th>
+							<th scope="col">Catégorie</th>
+							<th scope="col">Utilisateur</th>
+							<th scope="col">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for ressource in ressources %}
+							<tr>
+								<td>{{ ressource.titre }}</td>
+								<td>{{ ressource.contenu }}</td>
+								<td>{{ ressource.dateCreation|date('Y-m-d') }}</td>
+								<td>
+									{% if ressource.multimedia %}
+										<img src="{{ ressource.multimedia }}" alt="Multimedia" style="max-width: 50px;" class="img-fluid">
+									{% else %}
+										Pas de multimedia
+									{% endif %}
+								</td>
+								<td>{{ ressource.idCategorie.nom }}</td>
+								<td>{{ ressource.idUtilisateur.nom }}</td>
+								<td >
+                                    <div class="btn-group">
+									{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user and (app.user.id == ressource.idUtilisateur.id) %}
+										<form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
+											<input type="hidden" name="_method" value="DELETE">
+											<button type="submit" class="btn btn-danger btn-sm">
+												<i class="fa-solid fa-trash"></i>
+											</button>
+										</form>
+										<a href="{{ path('app_editer_ressource', {'id': ressource.id, 'redirect_to': 'app_profil'}) }}" class="btn btn-warning btn-sm">
+											<i class="fa-solid fa-pen-to-square"></i>
+										</a>
+									{% endif %}
+									<a href="{{ path('app_detailressources', {'id': ressource.id}) }}" class="btn btn-primary btn-sm">
+										<i class="fa-solid fa-eye"></i>
 									</a>
-								{% endif %}
-								<a href="{{ path('app_detailressources', {'id': ressource.id}) }}" class="btn btn-primary btn-sm">
-									<i class="fa-solid fa-eye"></i>
-								</a>
-							</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		  {% endif %}{% for role in rolesUtilisateur %}
+          {% if role == 'administrateur' %}
+             <button type="button" id="save-button" class="btn btn-primary" onclick="location.href='{{ path('app_statistic') }}'">Accéder au tableau de statistique</button>
+          {% endif %}
+      {% endfor %}
+	</div>
 
-        {% for role in rolesUtilisateur %}
-            {% if role == 'administrateur' %}
-               <button type="button" id="save-button" class="btn btn-primary" onclick="location.href='{{ path('app_statistic') }}'">Accéder au tableau de statistique</button>
-            {% endif %}
-        {% endfor %}
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const saveButton = document.getElementById('save-button');
-
-            let initialName = nameInput.value;
-            let initialEmail = emailInput.value;
-
-            function checkChanges() {
-                console.log("ici")
-                if (nameInput.value !== initialName || emailInput.value !== initialEmail) {
-                    saveButton.disabled = false;
-                } else {
-                    saveButton.disabled = true;
-                }
-            }
-
-            nameInput.addEventListener('input', checkChanges);
-            emailInput.addEventListener('input', checkChanges);
-
-            saveButton.addEventListener('click', async () => {
-                const name = nameInput.value;
-                const email = emailInput.value;
-
-                if (!name.trim() || !email.trim()) {
-                    alert("Veuillez remplir tous les champs.");
-                    return;
-                }
-
-                const response = await fetch('/api/user/update', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, email })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert(result.message);
-                    // Mise à jour des valeurs initiales après une sauvegarde réussie
-                    initialName = name;
-                    initialEmail = email;
-                    saveButton.disabled = true;
-                    window.location.reload();
-                } else {
-                    alert('Erreur : ' + result.message);
-                }
+	
+<script>
+menuToggle = document.querySelector('.nav-container input[type="checkbox"]');
+var btnGroup = document.querySelectorAll('.btn-group');
+if (menuToggle) {
+    menuToggle.addEventListener('change', function() {
+        if (menuToggle.checked) {
+            btnGroup.forEach(function(btn) {
+                btn.classList.add('hidden');
             });
+        } else {
+            btnGroup.forEach(function(btn) {
+                btn.classList.remove('hidden');
+            });
+        }
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const saveButton = document.getElementById('save-button');
+
+    let initialName = nameInput.value;
+    let initialEmail = emailInput.value;
+
+    function checkChanges() {
+        if (nameInput.value !== initialName || emailInput.value !== initialEmail) {
+            saveButton.disabled = false;
+        } else {
+            saveButton.disabled = true;
+        }
+    }
+
+    nameInput.addEventListener('input', checkChanges);
+    emailInput.addEventListener('input', checkChanges);
+
+    saveButton.addEventListener('click', async () => {
+        const name = nameInput.value;
+        const email = emailInput.value;
+
+        if (!name.trim() || !email.trim()) {
+            alert("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        const response = await fetch('/api/user/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email })
         });
-    </script>
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message);
+            // Mise à jour des valeurs initiales après une sauvegarde réussie
+            initialName = name;
+            initialEmail = email;
+            saveButton.disabled = true;
+            window.location.reload();
+        } else {
+            alert('Erreur : ' + result.message);
+        }
+    });
+});
+</script>
 {% endblock %}

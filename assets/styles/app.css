@@ -1,3 +1,40 @@
 .hidden {
     display: none;
   }
+
+  /* Style pour le menu hamburger */
+.navbar {
+  position: relative;
+  z-index: 1000;
+}
+
+.menu-items {
+  display: none;
+  position: relative;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 1001;
+  align-items: center;
+  overflow-y: none;
+}
+
+.checkbox:checked ~ .menu-items {
+  display: block;
+}
+
+.hamburger-lines {
+  cursor: pointer;
+  z-index: 1002;
+}
+
+body.body-no-overflow {
+  overflow: hidden;
+}
+
+/* Style pour la table */
+.table-responsive {
+  position: relative;
+  z-index: 1;
+}

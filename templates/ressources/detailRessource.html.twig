@@ -151,11 +151,11 @@
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             {% if estEnregistrer %}
                 <form method="delete" action="{{ path('app_delete_favoris', {'id': ressource.id}) }}">
-                    <button type="submit" class="favoris-remove">Retirer des favoris</button>
+                    <button type="submit" class="favoris"><i class="fa-solid fa-star"></i></button>
                 </form>
             {% else %}
                 <form method="post" action="{{ path('app_add_favoris', {'id': ressource.id}) }}">
-                    <button type="submit" class="favoris">Ajouter des favoris</button>
+                    <button type="submit" class="favoris"><i class="fa-regular fa-star"></i></button>
                 </form>
             {% endif %}
         {% endif %}
