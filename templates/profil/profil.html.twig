@@ -78,6 +78,12 @@
                 </table>
             </div>
         {% endif %}
+
+        {% for role in rolesUtilisateur %}
+            {% if role == 'administrateur' %}
+               <button type="button" id="save-button" class="btn btn-primary" onclick="location.href='{{ path('app_statistic') }}'">Accéder au tableau de statistique</button>
+            {% endif %}
+        {% endfor %}
     </div>
 
     <script>

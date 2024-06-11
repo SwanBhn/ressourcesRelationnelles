@@ -34,6 +34,7 @@ class ProfilController extends AbstractController
                 $currentUser = $entityManager->getRepository(User::class)->find($userId);
                 $nom = $currentUser ? $currentUser->getNom() : null;
                 $email = $currentUser ? $currentUser->getEmail() : null;
+                $roles = $currentUser ? $currentUser->getRoles() : null;
         
                 $enregistrerRepository = $entityManager->getRepository(Enregistrer::class);
                 $favoris = $enregistrerRepository->findBy(['idUtilisateur' => $userId]);
@@ -70,6 +71,7 @@ class ProfilController extends AbstractController
                 return $this->render('profil/profil.html.twig', [
                     'nomUtilisateur' => $nom, 
                     'emailUtilisateur' => $email,
+                    'rolesUtilisateur' => $roles,
                     'ressources' => $result
                 ]);
             }
