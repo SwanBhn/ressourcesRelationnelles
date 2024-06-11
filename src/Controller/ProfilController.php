@@ -12,12 +12,15 @@ use App\Entity\Enregistrer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+
+
 class ProfilController extends AbstractController
 {
     #[Route('/profil', name: 'app_profil')]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
+        
 
         if(is_null($user)){
             //Redirige sur la page d'inscription
@@ -76,6 +79,9 @@ class ProfilController extends AbstractController
         }
     }
 
+
+
+
     //----- Api -----//
 
     #[Route('/api/ressources/favoris/{idUtilisateur}', name: 'app_api_ressources_favoris', methods: ['GET'])]
@@ -124,22 +130,23 @@ class ProfilController extends AbstractController
         return new JsonResponse($result);
     }
 
-    #[Route('/api/user/update', name: 'app_user_update', methods: ['PUT'])]
-    public function updateUser(Request $request, EntityManagerInterface $entityManager): JsonResponse
+
+
+    #[Route('/profil/modifier-nom-email', name: 'app_modifier_nom_email', methods: ['POST'])]
+    public function modifierNomEmail(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $data = json_decode($request->getContent(), true);
         $user = $this->getUser();
-
-        if (!$user) {
-            return new JsonResponse(['message' => 'Utilisateur non trouvé!'], Response::HTTP_NOT_FOUND);
+        $nouveauNom = $request->request->get('nom');
+        $nouvelEmail = $request->request->get('email');
+    
+        if ($user && $nouveauNom && $nouvelEmail) {
+            $user->setNom($nouveauNom);
+            $user->setEmail($nouvelEmail);
+            $entityManager->flush();
         }
-
-        $user->setNom($data['name']);
-        $user->setEmail($data['email']);
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        return new JsonResponse(['message' => 'Informations mises à jour avec succès!']);
+    
+        // Rediriger l'utilisateur vers la page de profil après la modification
+        return $this->redirectToRoute('app_profil');
     }
+
 }

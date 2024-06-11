@@ -8,21 +8,7 @@ import './bootstrap.js';
 import './styles/app.css';
 
 
-menuToggle = document.querySelector('.nav-container input[type="checkbox"]');
-var btnGroup = document.querySelectorAll('.btn-group');
-if (menuToggle) {
-    menuToggle.addEventListener('change', function() {
-        if (menuToggle.checked) {
-            btnGroup.forEach(function(btn) {
-                btn.classList.add('hidden');
-            });
-        } else {
-            btnGroup.forEach(function(btn) {
-                btn.classList.remove('hidden');
-            });
-        }
-    });
-}
+
 
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -8,12 +8,12 @@
 		<h1 class="mt-5">Profil de
 			{{ nomUtilisateur }}</h1>
 		<h5>Mes informations personnelles :</h5>
-		<form id="profile-form" class="mb-4">
+		<form id="profile-form" class="mb-4" action="{{ path('app_modifier_nom_email') }}" method="post">
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group mt-2">
-						<label for="name" class="form-label">Nom:</label>
-						<input type="text" id="name" name="name" value="{{ nomUtilisateur }}" class="form-control">
+						<label for="nom" class="form-label">Nom:</label>
+						<input type="text" id="nom" name="nom" value="{{ nomUtilisateur }}" class="form-control">
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -23,8 +23,10 @@
 					</div>
 				</div>
 			</div>
-			<button type="button" id="save-button" class="btn btn-primary">Enregistrer</button>
+			<button type="submit" id="save-button" class="btn btn-primary" disabled>Enregistrer</button>
 		</form>
+
+
 		<h2>Mes favoris :</h2>
 		{% if ressources is empty %}
 			<p>Vous n'avez aucun favori.</p>
@@ -57,23 +59,23 @@
 								</td>
 								<td>{{ ressource.idCategorie.nom }}</td>
 								<td>{{ ressource.idUtilisateur.nom }}</td>
-								<td >
-                                    <div class="btn-group">
-									{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user and (app.user.id == ressource.idUtilisateur.id) %}
-										<form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
-											<input type="hidden" name="_method" value="DELETE">
-											<button type="submit" class="btn btn-danger btn-sm">
-												<i class="fa-solid fa-trash"></i>
-											</button>
-										</form>
-										<a href="{{ path('app_editer_ressource', {'id': ressource.id, 'redirect_to': 'app_profil'}) }}" class="btn btn-warning btn-sm">
-											<i class="fa-solid fa-pen-to-square"></i>
+								<td>
+									<div class="btn-group">
+										{% if is_granted('IS_AUTHENTICATED_FULLY') and app.user and (app.user.id == ressource.idUtilisateur.id) %}
+											<form method="post" action="{{ path('app_supprimer_ressource', {'id': ressource.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
+												<input type="hidden" name="_method" value="DELETE">
+												<button type="submit" class="btn btn-danger btn-sm">
+													<i class="fa-solid fa-trash"></i>
+												</button>
+											</form>
+											<a href="{{ path('app_editer_ressource', {'id': ressource.id, 'redirect_to': 'app_profil'}) }}" class="btn btn-warning btn-sm">
+												<i class="fa-solid fa-pen-to-square"></i>
+											</a>
+										{% endif %}
+										<a href="{{ path('app_detailressources', {'id': ressource.id}) }}" class="btn btn-primary btn-sm">
+											<i class="fa-solid fa-eye"></i>
 										</a>
-									{% endif %}
-									<a href="{{ path('app_detailressources', {'id': ressource.id}) }}" class="btn btn-primary btn-sm">
-										<i class="fa-solid fa-eye"></i>
-									</a>
-
+									</td>
 								</td>
 							</tr>
 						{% endfor %}
@@ -82,4 +84,34 @@
 			</div>
 		{% endif %}
 	</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var nomInput = document.getElementById('nom');
+        var emailInput = document.getElementById('email');
+        var saveButton = document.getElementById('save-button');
+
+        var nomInitial = nomInput.value;
+        var emailInitial = emailInput.value;
+
+        nomInput.addEventListener('input', function() {
+            updateSaveButton();
+        });
+
+        emailInput.addEventListener('input', function() {
+            updateSaveButton();
+        });
+
+        function updateSaveButton() {
+            var nomActuel = nomInput.value;
+            var emailActuel = emailInput.value;
+
+            if (nomActuel !== nomInitial || emailActuel !== emailInitial) {
+                saveButton.removeAttribute('disabled');
+            } else {
+                saveButton.setAttribute('disabled', 'disabled');
+            }
+        }
+    });
+</script>
 {% endblock %}
+
