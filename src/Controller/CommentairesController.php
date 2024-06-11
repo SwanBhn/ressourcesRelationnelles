@@ -16,36 +16,52 @@ class CommentairesController extends AbstractController
     #[Route("/ressources/{id}/commentaire", name: "app_add_commentaire", methods: ["POST"])]
     public function postCommentaire(Request $request, Ressources $ressource, EntityManagerInterface $entityManager): Response
     {
-        $commentaire = new Commentaires();
+        $user = $this->getUser();
 
-        $commentaire->setContenu($request->request->get('contenu'));
-        $commentaire->setIdRessource($ressource);
-        $commentaire->setIdUtilisateur($this->getUser());
-        $commentaire->setDateCreation(new \DateTime());
-        $entityManager->persist($commentaire);
-        $entityManager->flush();
+        if(is_null($user)){
+            //Redirige sur la page d'inscription
+            return $this->redirectToRoute('app_register');
+        }
+        else{
+            $commentaire = new Commentaires();
 
-        return $this->redirectToRoute('app_detailressources', ['id' => $ressource->getId()]);
+            $commentaire->setContenu($request->request->get('contenu'));
+            $commentaire->setIdRessource($ressource);
+            $commentaire->setIdUtilisateur($user);
+            $commentaire->setDateCreation(new \DateTime());
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+    
+            return $this->redirectToRoute('app_detailressources', ['id' => $ressource->getId()]);
+        }
     }
 
     #[Route("/ressources/commentaire/{idCommentaire}", name: "app_delete_commentaire", methods: ["DELETE"])]
     public function deleteCommentaire($idCommentaire, EntityManagerInterface $entityManager): RedirectResponse
     {
         $user = $this->getUser();
-        $userId = $user->getId();
 
-        if(is_null($userId)){
-            //TODO: rediriger sur la page d'erreur
-            throw new Exception('Erreur lors de la récupération de votre compte');
+        if(is_null($user)){
+            //Redirige sur la page d'inscription
+            return $this->redirectToRoute('app_register');
         }
-        
-        $commentaire = $entityManager->getRepository(Commentaires::class)->find($idCommentaire);
+        else{
+            $userId = $user->getId();
 
-        if ($commentaire) {
-            $entityManager->remove($commentaire);
-            $entityManager->flush();
+            if(is_null($userId)){
+                //TODO: rediriger sur la page d'erreur
+                throw new Exception('Erreur lors de la récupération de votre compte');
+            }
+            else{
+                $commentaire = $entityManager->getRepository(Commentaires::class)->find($idCommentaire);
+
+                if ($commentaire) {
+                    $entityManager->remove($commentaire);
+                    $entityManager->flush();
+                }
+                
+                return $this->redirectToRoute('app_detailressources', ['id' => $commentaire->getIdRessource()->getId()]);
+            }
         }
-        
-        return $this->redirectToRoute('app_detailressources', ['id' => $commentaire->getIdRessource()->getId()]);
     }
 }
