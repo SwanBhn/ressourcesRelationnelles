@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" id="save-button" class="btn btn-primary">Enregistrer</button>
+            <button type="button" id="save-button" class="btn btn-primary" disabled>Enregistrer</button>
         </form>
         <h2>Mes favoris :</h2>
         {% if ressources is empty %}
@@ -90,6 +90,7 @@
             let initialEmail = emailInput.value;
 
             function checkChanges() {
+                console.log("ici")
                 if (nameInput.value !== initialName || emailInput.value !== initialEmail) {
                     saveButton.disabled = false;
                 } else {
