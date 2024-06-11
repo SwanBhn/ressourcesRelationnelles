@@ -10,18 +10,28 @@
 		<h5>Mes informations personnelles :</h5>
 		<form id="profile-form" class="mb-4">
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<div class="form-group mt-2">
 						<label for="name" class="form-label">Nom:</label>
 						<input type="text" id="name" name="name" value="{{ nomUtilisateur }}" class="form-control">
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<div class="form-group mt-2">
 						<label for="email" class="form-label">Email:</label>
 						<input type="email" id="email" name="email" value="{{ emailUtilisateur }}" class="form-control">
 					</div>
 				</div>
+                {% for role in rolesUtilisateur %}
+                {% if role != 'ROLE_USER' %}
+                <div class="col-md-4">
+					<div class="form-group mt-2">
+						<label for="email" class="form-label">Role:</label>
+						<input type="email" id="email" name="email" value="{{ role }}" class="form-control" disabled>
+					</div>
+				</div>
+                {% endif %}
+                {% endfor %}
 			</div>
 			<button type="button" id="save-button" class="btn btn-primary" disabled>Enregistrer</button>
 		</form>
