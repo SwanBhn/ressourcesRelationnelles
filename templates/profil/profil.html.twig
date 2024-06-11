@@ -73,14 +73,17 @@
 									<a href="{{ path('app_detailressources', {'id': ressource.id}) }}" class="btn btn-primary btn-sm">
 										<i class="fa-solid fa-eye"></i>
 									</a>
-
 								</td>
 							</tr>
 						{% endfor %}
 					</tbody>
 				</table>
 			</div>
-		{% endif %}
+		  {% endif %}{% for role in rolesUtilisateur %}
+          {% if role == 'administrateur' %}
+             <button type="button" id="save-button" class="btn btn-primary" onclick="location.href='{{ path('app_statistic') }}'">Accéder au tableau de statistique</button>
+          {% endif %}
+      {% endfor %}
 	</div>
 
 	
