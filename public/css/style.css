@@ -316,3 +316,8 @@ body{
   opacity: 0.8;
 }
 /* Fin CSS Relation */
+
+/* CSS DropDown Formulaire */
+.custom-dropdown {
+  font-family: 'Louis_George_Cafe';
+}

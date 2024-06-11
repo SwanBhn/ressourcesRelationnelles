@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Categories;
 use App\Entity\Ressources;
 use App\Entity\User;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -52,10 +54,18 @@ class RessourcePostFormType extends AbstractType
             //     'class' => User::class,
             //     'choice_label' => 'id',
             // ])
-            // ->add('idCategorie', EntityType::class, [
-            //     'class' => Categories::class,
-            //     'choice_label' => 'id',
-            // ])
+            ->add('idCategorie', EntityType::class, [
+                'label' => 'Catégorie',
+                'class' => Categories::class,
+                'choice_label' => 'nom',
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nom', 'ASC');
+                },
+                'attr' => array(
+                    'class' => 'form-control custom-dropdown'
+                )
+            ])
         ;
     }
 
