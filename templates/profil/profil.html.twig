@@ -84,34 +84,6 @@
 			</div>
 		{% endif %}
 	</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var nomInput = document.getElementById('nom');
-        var emailInput = document.getElementById('email');
-        var saveButton = document.getElementById('save-button');
 
-        var nomInitial = nomInput.value;
-        var emailInitial = emailInput.value;
-
-        nomInput.addEventListener('input', function() {
-            updateSaveButton();
-        });
-
-        emailInput.addEventListener('input', function() {
-            updateSaveButton();
-        });
-
-        function updateSaveButton() {
-            var nomActuel = nomInput.value;
-            var emailActuel = emailInput.value;
-
-            if (nomActuel !== nomInitial || emailActuel !== emailInitial) {
-                saveButton.removeAttribute('disabled');
-            } else {
-                saveButton.setAttribute('disabled', 'disabled');
-            }
-        }
-    });
-</script>
 {% endblock %}
 

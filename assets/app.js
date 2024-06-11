@@ -12,7 +12,7 @@ import './styles/app.css';
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const nameInput = document.getElementById('name');
+    const nameInput = document.getElementById('nom');
     const emailInput = document.getElementById('email');
     const saveButton = document.getElementById('save-button');
 
@@ -62,5 +62,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
