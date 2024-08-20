@@ -8,7 +8,7 @@ use App\Entity\Ressources;
 use App\Entity\User;
 use App\Repository\EnregistrerRepository;
 use App\Repository\RessourceRepository;
-use Doctrine\ORM\EntityManagerInterface; 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +30,6 @@ class FavorisController extends AbstractController
             $userId = $user->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
             else{

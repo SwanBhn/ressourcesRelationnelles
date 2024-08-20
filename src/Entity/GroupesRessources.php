@@ -8,10 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: GroupesRessourcesRepository::class)]
 class GroupesRessources
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
+
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'groupesRessources')]
@@ -23,10 +20,6 @@ class GroupesRessources
     #[ORM\JoinColumn(name:"idGroupe", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
     private ?Groupes $idGroupe = null;
 
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
 
     public function getIdRessource(): ?Ressources
     {

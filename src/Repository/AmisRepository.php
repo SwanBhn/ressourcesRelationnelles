@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\Amis;
@@ -36,33 +35,9 @@ class AmisRepository extends ServiceEntityRepository
             ->setParameter('userId', $userId)
             ->orderBy('u.nom', 'ASC');
 
-        $amis = $queryBuilder->getQuery()->getResult();
+     
 
-        return $amis;
+        return $queryBuilder->getQuery()->getResult();
     }
-
-//    /**
-//     * @return Amis[] Returns an array of Amis objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Amis
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
+

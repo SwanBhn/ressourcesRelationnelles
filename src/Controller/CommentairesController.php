@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Commentaires;
 use App\Entity\Ressources;
-use Doctrine\ORM\EntityManagerInterface; 
+
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,6 @@ class CommentairesController extends AbstractController
             $userId = $user->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
             else{
