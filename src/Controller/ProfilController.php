@@ -27,7 +27,6 @@ class ProfilController extends AbstractController
             $userId = $user->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
             else{

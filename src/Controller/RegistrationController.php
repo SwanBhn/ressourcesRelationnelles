@@ -50,7 +50,6 @@ class RegistrationController extends AbstractController
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    //TODO : Récuperer l'adresse mail rentrée dans le formulaire lors de l'inscription
                     ->from(new Address('nael.alaji@hotmail.com', 'nael'))
                     ->to($user->getEmail())
                     ->subject('Civilink - Veuillez confirmer votre adresse mail')
@@ -60,7 +59,6 @@ class RegistrationController extends AbstractController
             // do anything else you need here, like send an email
 
             return $security->login($user, 'form_login', 'main');
-            // return $security->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -81,8 +79,6 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('app_register');
         }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Votre adresse mail à été confirmé.');
 
         return $this->redirectToRoute('app_register');

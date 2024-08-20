@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Article;
 use App\Entity\Amis;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,7 +33,6 @@ class RelationsController extends AbstractController
             $userId = $user->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
 

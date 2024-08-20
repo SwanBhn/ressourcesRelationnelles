@@ -9,10 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ParticiperRepository::class)]
 class Participer
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
+    
 
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'participers')]
@@ -27,10 +24,7 @@ class Participer
     #[ORM\Column(type: Types::DATETIME_MUTABLE, name: "dateParticipation")]
     private ?\DateTimeInterface $dateParticipation = null;
 
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
+   
 
     public function getIdUtilisateur(): ?User
     {

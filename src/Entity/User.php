@@ -249,11 +249,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeRessource(Ressources $ressource): static
     {
-        if ($this->ressources->removeElement($ressource)) {
+        if ($this->ressources->removeElement($ressource) && $ressource->getIdUtilisateur() === $this ) {
             // set the owning side to null (unless already changed)
-            if ($ressource->getIdUtilisateur() === $this) {
                 $ressource->setIdUtilisateur(null);
-            }
         }
 
         return $this;
@@ -279,11 +277,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeGroupe(Groupes $groupe): static
     {
-        if ($this->groupes->removeElement($groupe)) {
-            // set the owning side to null (unless already changed)
-            if ($groupe->getIdUtilisateur() === $this) {
+        if ($this->groupes->removeElement($groupe) && $groupe->getIdUtilisateur() === $this) {
+
                 $groupe->setIdUtilisateur(null);
-            }
+            
         }
 
         return $this;
@@ -309,11 +306,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeMessage(Messages $message): static
     {
-        if ($this->messages->removeElement($message)) {
+        if ($this->messages->removeElement($message) && $message->getIdUtilisateurEnvoie() === $this) {
             // set the owning side to null (unless already changed)
-            if ($message->getIdUtilisateurEnvoie() === $this) {
                 $message->setIdUtilisateurEnvoie(null);
-            }
         }
 
         return $this;
@@ -339,11 +334,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeCommentaire(Commentaires $commentaire): static
     {
-        if ($this->commentaires->removeElement($commentaire)) {
+        if ($this->commentaires->removeElement($commentaire) && $commentaire->getIdUtilisateur() === $this) {
             // set the owning side to null (unless already changed)
-            if ($commentaire->getIdUtilisateur() === $this) {
+
                 $commentaire->setIdUtilisateur(null);
-            }
+            
         }
 
         return $this;
@@ -370,11 +365,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeUtilisateur(Amis $utilisateur): static
     {
-        if ($this->utilisateur->removeElement($utilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getIdUtilisateur() === $this) {
+        if ($this->utilisateur->removeElement($utilisateur) && $utilisateur->getIdUtilisateur() === $this) {
                 $utilisateur->setIdUtilisateur(null);
-            }
         }
 
         return $this;
@@ -400,11 +392,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeAmi(Amis $ami): static
     {
-        if ($this->ami->removeElement($ami)) {
-            // set the owning side to null (unless already changed)
-            if ($ami->getIdUtilisateurAmi() === $this) {
+        if ($this->ami->removeElement($ami) && $ami->getIdUtilisateurAmi() === $this) {
                 $ami->setIdUtilisateurAmi(null);
-            }
         }
 
         return $this;
@@ -430,11 +419,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removePartage(Partage $partage): static
     {
-        if ($this->partages->removeElement($partage)) {
-            // set the owning side to null (unless already changed)
-            if ($partage->getIdUtilisateur() === $this) {
+        if ($this->partages->removeElement($partage) && $partage->getIdUtilisateur() === $this) {
+
                 $partage->setIdUtilisateur(null);
-            }
         }
 
         return $this;
@@ -460,11 +447,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeEnregistrer(Enregistrer $enregistrer): static
     {
-        if ($this->enregistrers->removeElement($enregistrer)) {
-            // set the owning side to null (unless already changed)
-            if ($enregistrer->getIdUtilisateur() === $this) {
+        if ($this->enregistrers->removeElement($enregistrer) && $enregistrer->getIdUtilisateur() === $this) {
+
                 $enregistrer->setIdUtilisateur(null);
-            }
+
         }
 
         return $this;
@@ -490,11 +476,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeParticiper(Participer $participer): static
     {
-        if ($this->participers->removeElement($participer)) {
-            // set the owning side to null (unless already changed)
-            if ($participer->getIdUtilisateur() === $this) {
+        if ($this->participers->removeElement($participer) && $participer->getIdUtilisateur() === $this) {
                 $participer->setIdUtilisateur(null);
-            }
         }
 
         return $this;
@@ -520,11 +503,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeGroupesUtilisateur(GroupesUtilisateurs $groupesUtilisateur): static
     {
-        if ($this->groupesUtilisateurs->removeElement($groupesUtilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($groupesUtilisateur->getIdUtilisateur() === $this) {
+        if ($this->groupesUtilisateurs->removeElement($groupesUtilisateur) && $groupesUtilisateur->getIdUtilisateur() === $this) {
+
                 $groupesUtilisateur->setIdUtilisateur(null);
-            }
+            
         }
 
         return $this;

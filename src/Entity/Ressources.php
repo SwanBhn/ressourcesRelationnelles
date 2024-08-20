@@ -247,11 +247,8 @@ class Ressources
 
     public function removeCommentaire(Commentaires $commentaire): static
     {
-        if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getIdRessource() === $this) {
+        if ($this->commentaires->removeElement($commentaire) && $commentaire->getIdRessource() === $this) {
                 $commentaire->setIdRessource(null);
-            }
         }
 
         return $this;
@@ -277,11 +274,8 @@ class Ressources
 
     public function removePartage(Partage $partage): static
     {
-        if ($this->partages->removeElement($partage)) {
-            // set the owning side to null (unless already changed)
-            if ($partage->getIdRessource() === $this) {
+        if ($this->partages->removeElement($partage) && $partage->getIdRessource() === $this) {
                 $partage->setIdRessource(null);
-            }
         }
 
         return $this;
@@ -307,11 +301,8 @@ class Ressources
 
     public function removeEnregistrer(Enregistrer $enregistrer): static
     {
-        if ($this->enregistrers->removeElement($enregistrer)) {
-            // set the owning side to null (unless already changed)
-            if ($enregistrer->getIdRessource() === $this) {
+        if ($this->enregistrers->removeElement($enregistrer) && $enregistrer->getIdRessource() === $this) {
                 $enregistrer->setIdRessource(null);
-            }
         }
 
         return $this;
@@ -337,11 +328,8 @@ class Ressources
 
     public function removeParticiper(Participer $participer): static
     {
-        if ($this->participers->removeElement($participer)) {
-            // set the owning side to null (unless already changed)
-            if ($participer->getIdRessource() === $this) {
+        if ($this->participers->removeElement($participer)&& $participer->getIdRessource() === $this) {
                 $participer->setIdRessource(null);
-            }
         }
 
         return $this;
@@ -367,11 +355,8 @@ class Ressources
 
     public function removeGroupesRessource(GroupesRessources $groupesRessource): static
     {
-        if ($this->groupesRessources->removeElement($groupesRessource)) {
-            // set the owning side to null (unless already changed)
-            if ($groupesRessource->getIdRessource() === $this) {
+        if ($this->groupesRessources->removeElement($groupesRessource) && $groupesRessource->getIdRessource() === $this) {
                 $groupesRessource->setIdRessource(null);
-            }
         }
 
         return $this;

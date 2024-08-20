@@ -63,11 +63,8 @@ class Categories
 
     public function removeRessource(Ressources $ressource): static
     {
-        if ($this->ressources->removeElement($ressource)) {
-            // set the owning side to null (unless already changed)
-            if ($ressource->getIdCategorie() === $this) {
-                $ressource->setIdCategorie(null);
-            }
+        if ($this->ressources->removeElement($ressource) && ($ressource->getIdCategorie() === $this)) {
+            $ressource->setIdCategorie(null);
         }
 
         return $this;

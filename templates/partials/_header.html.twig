@@ -13,7 +13,7 @@
                        
           </div>
           <div class="menu-items">
-            <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
+            <ul><a href="{{ path('app_accueil') }}">Accueil</a></li>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <li><a href="{{ path('app_getRelations') }}">Relations</a></li>
             {% endif %}

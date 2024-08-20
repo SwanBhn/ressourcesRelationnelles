@@ -9,11 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EnregistrerRepository::class)]
 class Enregistrer
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
-
     #[ORM\Id]
     #[ORM\ManyToOne(inversedBy: 'enregistrers')]
     #[ORM\JoinColumn(name:"idUtilisateur", referencedColumnName:"id", onDelete:"CASCADE", nullable: false)]
@@ -27,10 +22,6 @@ class Enregistrer
     #[ORM\Column(type: Types::DATETIME_MUTABLE, name: "dateFavoris")]
     private ?\DateTimeInterface $dateFavoris = null;
 
-    // public function getId(): ?int
-    // {
-    //     return $this->id;
-    // }
 
     public function getIdUtilisateur(): ?User
     {
