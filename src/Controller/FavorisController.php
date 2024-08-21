@@ -49,7 +49,7 @@ class FavorisController extends AbstractController
                 
                 return $this->redirectToRoute('app_detailressources', array('id' => $id));
             }
-        }        
+        }
     }
 
     #[Route('/favoris/supprimer/{id}', name: 'app_delete_favoris', methods: ['DELETE'])]
@@ -65,7 +65,6 @@ class FavorisController extends AbstractController
             $userId = $user->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
             else{
