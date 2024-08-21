@@ -137,52 +137,37 @@ class RelationsController extends AbstractController
     #[Route('/api/relations/{userId}', name: 'app_api_getRelations', methods: ['GET'])]
     public function getRelationsApi(EntityManagerInterface $entityManager, int $userId): Response
     {
-        $response = null;
-
         if (is_null($userId)) {
-            $response = new JsonResponse(['message' => self::ERROR_MESSAGE], Response::HTTP_NOT_FOUND);
-        } else {
-            $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
-
-            if (is_null($currentUser)) {
-                $response = new JsonResponse(['message' => self::ERROR_MESSAGE], Response::HTTP_NOT_FOUND);
-            } else {
-                $amis = $this->amisRepository->findFriendsByUserId($userId);
-
-                if (is_null($amis)) {
-                    $response = new JsonResponse(['message' => 'Ajoutez des personnes à vos relations!'], Response::HTTP_NOT_FOUND);
-                } else {
-                    $tableau = [];
-
-                    foreach ($amis as $ami) {
-                        $amiId = $ami->getIdUtilisateurAmi()->getId();
-
-                        if ($amiId == $userId) {
-                            $tableau[] = [
-                                'idUtilisateur' => $ami->getIdUtilisateurAmi()->getId(),
-                                'photo' => $ami->getIdUtilisateur()->getPhoto(),
-                                'idAmi' => $ami->getIdUtilisateur()->getId(),
-                                'nom' => $ami->getIdUtilisateur()->getNom(),
-                                'description' => $ami->getIdUtilisateur()->getDescription()
-                            ];
-                        } else {
-                            $tableau[] = [
-                                'idUtilisateur' => $ami->getIdUtilisateur()->getId(),
-                                'photo' => $ami->getIdUtilisateurAmi()->getPhoto(),
-                                'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
-                                'nom' => $ami->getIdUtilisateurAmi()->getNom(),
-                                'description' => $ami->getIdUtilisateurAmi()->getDescription()
-                            ];
-                        }
-                    }
-
-                    $response = new JsonResponse($tableau, 200, ['Access-Control-Allow-Origin' => '*']);
-                }
-            }
+            return new JsonResponse(['message' => self::ERROR_MESSAGE], Response::HTTP_NOT_FOUND);
         }
-
-        return $response;
-}
+    
+        $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
+    
+        if (is_null($currentUser)) {
+            return new JsonResponse(['message' => self::ERROR_MESSAGE], Response::HTTP_NOT_FOUND);
+        }
+    
+        $amis = $this->amisRepository->findFriendsByUserId($userId);
+    
+        if (is_null($amis)) {
+            return new JsonResponse(['message' => 'Ajoutez des personnes à vos relations!'], Response::HTTP_NOT_FOUND);
+        }
+    
+        $tableau = array_map(function($ami) use ($userId) {
+            $isCurrentUserFriend = $ami->getIdUtilisateurAmi()->getId() == $userId;
+            
+            return [
+                'idUtilisateur' => $isCurrentUserFriend ? $ami->getIdUtilisateurAmi()->getId() : $ami->getIdUtilisateur()->getId(),
+                'photo' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getPhoto() : $ami->getIdUtilisateurAmi()->getPhoto(),
+                'idAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getId() : $ami->getIdUtilisateurAmi()->getId(),
+                'nom' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getNom() : $ami->getIdUtilisateurAmi()->getNom(),
+                'description' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getDescription() : $ami->getIdUtilisateurAmi()->getDescription(),
+            ];
+        }, $amis);
+    
+        return new JsonResponse($tableau, 200, ['Access-Control-Allow-Origin' => '*']);
+    }
+    
 
 
     #[Route('/api/relations/{userId}/ami/{idAmi}', name: 'app_api_deleteRelations', methods: ['DELETE'])]
