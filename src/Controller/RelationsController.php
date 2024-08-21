@@ -242,5 +242,5 @@ class RelationsController extends AbstractController
                     'idUtilisateur' => $idAmi,
                     'idUtilisateurAmi' => $userId
                 ]);
-    }    
+    }
 }
