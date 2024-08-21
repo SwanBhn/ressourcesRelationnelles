@@ -83,15 +83,13 @@ class Groupes
 
     public function removeGroupesUtilisateur(GroupesUtilisateurs $groupesUtilisateur): static
     {
-        if ($this->groupesUtilisateurs->removeElement($groupesUtilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($groupesUtilisateur->getIdGroupe() === $this) {
-                $groupesUtilisateur->setIdGroupe(null);
-            }
+        if ($this->groupesUtilisateurs->removeElement($groupesUtilisateur) && $groupesUtilisateur->getIdGroupe() === $this) {
+            $groupesUtilisateur->setIdGroupe(null);
         }
 
         return $this;
     }
+
 
     /**
      * @return Collection<int, GroupesRessources>
@@ -113,11 +111,8 @@ class Groupes
 
     public function removeGroupesRessource(GroupesRessources $groupesRessource): static
     {
-        if ($this->groupesRessources->removeElement($groupesRessource)) {
-            // set the owning side to null (unless already changed)
-            if ($groupesRessource->getIdGroupe() === $this) {
-                $groupesRessource->setIdGroupe(null);
-            }
+        if ($this->groupesRessources->removeElement($groupesRessource) && $groupesRessource->getIdGroupe() === $this) {
+            $groupesRessource->setIdGroupe(null);
         }
 
         return $this;

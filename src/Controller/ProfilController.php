@@ -19,63 +19,81 @@ class ProfilController extends AbstractController
     {
         $user = $this->getUser();
 
-        if(is_null($user)){
-            //Redirige sur la page d'inscription
+        if (is_null($user)) {
             return $this->redirectToRoute('app_register');
         }
-        else{
-            $userId = $user->getId();
 
-            if(is_null($userId)){
-                throw new Exception('Erreur lors de la récupération de votre compte');
-            }
-            else{
-                $currentUser = $entityManager->getRepository(User::class)->find($userId);
-                $nom = $currentUser ? $currentUser->getNom() : null;
-                $email = $currentUser ? $currentUser->getEmail() : null;
-                $roles = $currentUser ? $currentUser->getRoles() : null;
-        
-                $enregistrerRepository = $entityManager->getRepository(Enregistrer::class);
-                $favoris = $enregistrerRepository->findBy(['idUtilisateur' => $userId]);
-        
-                $ressourceRepository = $entityManager->getRepository(Ressources::class);
-                $result = [];
-        
-                // Récupérer les détails des ressources favorites
-                foreach ($favoris as $favori) {
-                    $ressource = $ressourceRepository->find($favori->getIdRessource());
-                    if ($ressource !== null) {
-                        $result[] = [
-                            'id' => $ressource->getId(),
-                            'titre' => $ressource->getTitre(),
-                            'contenu' => $ressource->getContenu(),
-                            'dateCreation' => $ressource->getDateCreation(),
-                            'estValidee' => $ressource->isEstValidee(),
-                            'estRestreinte' => $ressource->isEstRestreinte(),
-                            'estExploitee' => $ressource->isEstExploitee(),
-                            'estArchivee' => $ressource->isEstArchivee(),
-                            'estDesactivee' => $ressource->isEstDesactivee(),
-                            'multimedia' => $ressource->getMultimedia(),
-                            'idUtilisateur' => $ressource->getIdUtilisateur(),
-                            'idCategorie' => $ressource->getIdCategorie(),
-                            'commentaires' => $ressource->getCommentaires(),
-                            'partages' => $ressource->getPartages(),
-                            'enregistrers' => $ressource->getEnregistrers(),
-                            'participers' => $ressource->getParticipers(),
-                            'groupesRessources' => $ressource->getGroupesRessources(),
-                        ];
-                    }
-                }
-        
-                return $this->render('profil/profil.html.twig', [
-                    'nomUtilisateur' => $nom, 
-                    'emailUtilisateur' => $email,
-                    'rolesUtilisateur' => $roles,
-                    'ressources' => $result
-                ]);
+        $currentUser = $this->findUser($entityManager, $user);
+
+        if (is_null($currentUser)) {
+            throw new Exception('Erreur lors de la récupération de votre compte');
+        }
+
+        $userInfo = $this->getUserInfo($currentUser);
+        $favoris = $this->getUserFavoris($entityManager, $currentUser->getId());
+        $ressources = $this->getRessourcesDetails($entityManager, $favoris);
+
+        return $this->render('profil/profil.html.twig', array_merge($userInfo, ['ressources' => $ressources]));
+}
+
+    private function findUser(EntityManagerInterface $entityManager, $user): ?User
+    {
+        $userId = $user->getId();
+        if (is_null($userId)) {
+            return null;
+        }
+
+        return $entityManager->getRepository(User::class)->find($userId);
+    }
+
+    private function getUserInfo(User $user): array
+    {
+        return [
+            'nomUtilisateur' => $user->getNom(),
+            'emailUtilisateur' => $user->getEmail(),
+            'rolesUtilisateur' => $user->getRoles(),
+        ];
+    }
+
+    private function getUserFavoris(EntityManagerInterface $entityManager, int $userId): array
+    {
+        $enregistrerRepository = $entityManager->getRepository(Enregistrer::class);
+        return $enregistrerRepository->findBy(['idUtilisateur' => $userId]);
+    }
+
+    private function getRessourcesDetails(EntityManagerInterface $entityManager, array $favoris): array
+    {
+        $ressourceRepository = $entityManager->getRepository(Ressources::class);
+        $result = [];
+
+        foreach ($favoris as $favori) {
+            $ressource = $ressourceRepository->find($favori->getIdRessource());
+            if ($ressource !== null) {
+                $result[] = [
+                    'id' => $ressource->getId(),
+                    'titre' => $ressource->getTitre(),
+                    'contenu' => $ressource->getContenu(),
+                    'dateCreation' => $ressource->getDateCreation(),
+                    'estValidee' => $ressource->isEstValidee(),
+                    'estRestreinte' => $ressource->isEstRestreinte(),
+                    'estExploitee' => $ressource->isEstExploitee(),
+                    'estArchivee' => $ressource->isEstArchivee(),
+                    'estDesactivee' => $ressource->isEstDesactivee(),
+                    'multimedia' => $ressource->getMultimedia(),
+                    'idUtilisateur' => $ressource->getIdUtilisateur(),
+                    'idCategorie' => $ressource->getIdCategorie(),
+                    'commentaires' => $ressource->getCommentaires(),
+                    'partages' => $ressource->getPartages(),
+                    'enregistrers' => $ressource->getEnregistrers(),
+                    'participers' => $ressource->getParticipers(),
+                    'groupesRessources' => $ressource->getGroupesRessources(),
+                ];
             }
         }
+
+        return $result;
     }
+
 
     //----- Api -----//
 

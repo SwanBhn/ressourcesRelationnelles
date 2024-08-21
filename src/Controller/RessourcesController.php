@@ -10,7 +10,7 @@ use App\Entity\Amis;
 use App\Form\RessourcePostFormType;
 use App\Form\RessourcePutFormType;
 use App\Repository\RessourcesRepository;
-use Doctrine\ORM\EntityManagerInterface; 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,7 +34,6 @@ class RessourcesController extends AbstractController
             $userId = $user->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
             else{
@@ -58,8 +57,6 @@ class RessourcesController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $currentDate = new \DateTime();
-            $categorie = $entityManager->getRepository(Categories::class)->find(1);
-
             $ressource->setDateCreation($currentDate);
             $ressource->setEstPubliee(false);
             $ressource->setEstValidee(false);
@@ -81,7 +78,7 @@ class RessourcesController extends AbstractController
 
     #[Route('/ressources/editer/{id}', name: 'app_editer_ressource')]
     public function putRessource($id, Request $request, EntityManagerInterface $entityManager): Response
-    {       
+    {
         $ressource = $entityManager->getRepository(Ressources::class)->find($id);
 
         $form = $this->createForm(RessourcePutFormType::class, $ressource);
@@ -89,8 +86,6 @@ class RessourcesController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $currentDate = new \DateTime();
-            $categorie = $entityManager->getRepository(Categories::class)->find(1);
-    
             $ressource->setDateCreation($currentDate);
             $ressource->setEstPubliee(false);
             $ressource->setEstValidee(false);
@@ -162,7 +157,6 @@ class RessourcesController extends AbstractController
             $idAmis = $ressource->getIdUtilisateur()->getId();
 
             if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
                 throw new Exception('Erreur lors de la récupération de votre compte');
             }
             else{
@@ -193,7 +187,7 @@ class RessourcesController extends AbstractController
             'utilisateur' => $utilisateur,
             'commentaires' => $commentairesTab,
             'estEnregistrer' => $estEnregistrer,
-            'estAmi' => $estAmi 
+            'estAmi' => $estAmi
         ]);
     }
 

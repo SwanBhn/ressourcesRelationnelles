@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-use App\Entity\Article;
+
 use App\Entity\Amis;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +15,10 @@ use App\Repository\AmisRepository;
 
 class RelationsController extends AbstractController
 {
+    private const ERROR_MESSAGE = 'Erreur lors de la récupération de votre compte';
+
+    private $amisRepository;
+
     public function __construct(AmisRepository $amisRepository)
     {
         $this->amisRepository = $amisRepository;
@@ -25,53 +29,50 @@ class RelationsController extends AbstractController
     {
         $user = $this->getUser();
 
-        if(is_null($user)){
-            //Redirige sur la page d'inscription
+        if (is_null($user)) {
             return $this->redirectToRoute('app_register');
         }
-        else{
-            $userId = $user->getId();
 
-            if(is_null($userId)){
-                throw new Exception('Erreur lors de la récupération de votre compte');
-            }
+        $userId = $user->getId();
 
-            $amis = $this->amisRepository->findFriendsByUserId($userId);
-
-            $currentUser = $entityManager->getRepository(User::class)->find($userId);
-            $nom = $currentUser ? $currentUser->getNom() : null;
-
-            $tableau = [];
-            if(!is_null($amis)){
-                foreach ($amis as $ami) {
-                    $amiId = $ami->getIdUtilisateurAmi()->getId();
-                    if($amiId == $userId){
-                        $tableau[] = [
-                            'idUtilisateur' => $ami->getIdUtilisateurAmi()->getId(),
-                            'imageAmi' => $ami->getIdUtilisateur()->getPhoto(),
-                            'idAmi' => $ami->getIdUtilisateur()->getId(),
-                            'nomAmi' => $ami->getIdUtilisateur()->getNom(),
-                            'descriptionAmi' => $ami->getIdUtilisateur()->getDescription()
-                        ];
-                    }
-                    else
-                    {
-                        $tableau[] = [
-                            'idUtilisateur' => $ami->getIdUtilisateur()->getId(),
-                            'imageAmi' => $ami->getIdUtilisateurAmi()->getPhoto(),
-                            'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
-                            'nomAmi' => $ami->getIdUtilisateurAmi()->getNom(),
-                            'descriptionAmi' => $ami->getIdUtilisateurAmi()->getDescription()
-                        ];
-                    }
-                }
-            }
-
-            return $this->render('relations/relations.html.twig', [
-                'relations' => $tableau,
-                'nomUtilisateur' => $nom
-            ]);
+        if (is_null($userId)) {
+            throw new Exception(self::ERROR_MESSAGE);
         }
+
+        $amis = $this->amisRepository->findFriendsByUserId($userId);
+        $currentUser = $entityManager->getRepository(User::class)->find($userId);
+        $nom = $currentUser ? $currentUser->getNom() : null;
+
+        $relations = $this->prepareRelations($amis, $userId);
+
+        return $this->render('relations/relations.html.twig', [
+            'relations' => $relations,
+            'nomUtilisateur' => $nom
+        ]);
+    }
+
+    private function prepareRelations(array $amis, int $userId): array
+    {
+        $relations = [];
+
+        foreach ($amis as $ami) {
+            $relations[] = $this->formatRelation($ami, $userId);
+        }
+
+        return $relations;
+    }
+
+    private function formatRelation(Amis $ami, int $userId): array
+    {
+        $isCurrentUserFriend = $ami->getIdUtilisateurAmi()->getId() == $userId;
+
+        return [
+            'idUtilisateur' => $isCurrentUserFriend ? $ami->getIdUtilisateurAmi()->getId() : $ami->getIdUtilisateur()->getId(),
+            'imageAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getPhoto() : $ami->getIdUtilisateurAmi()->getPhoto(),
+            'idAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getId() : $ami->getIdUtilisateurAmi()->getId(),
+            'nomAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getNom() : $ami->getIdUtilisateurAmi()->getNom(),
+            'descriptionAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getDescription() : $ami->getIdUtilisateurAmi()->getDescription(),
+        ];
     }
 
     #[Route('/supprimerRelation/{idAmis}', name: 'app_deleteRelation')]
@@ -79,31 +80,28 @@ class RelationsController extends AbstractController
     {
         $user = $this->getUser();
 
-        if(is_null($user)){
-            //Redirige sur la page d'inscription
+        if (is_null($user)) {
             return $this->redirectToRoute('app_register');
         }
-        else{
-            $userId = $user->getId();
 
-            if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
-                throw new Exception('Erreur lors de la récupération de votre compte');
-            }
+        $userId = $user->getId();
 
-            $deleteAmis = $entityManager->getRepository(Amis::class)
-                ->findOneBy([
-                    'idUtilisateur' => $userId,
-                    'idUtilisateurAmi' => $idAmis
-                ]);
-
-            if ($deleteAmis) {
-                $entityManager->remove($deleteAmis);
-                $entityManager->flush();
-            }
-            
-            return $this->redirectToRoute('app_getRelations');
+        if (is_null($userId)) {
+            throw new Exception(self::ERROR_MESSAGE);
         }
+
+        $deleteAmis = $entityManager->getRepository(Amis::class)
+            ->findOneBy([
+                'idUtilisateur' => $userId,
+                'idUtilisateurAmi' => $idAmis
+            ]);
+
+        if ($deleteAmis) {
+            $entityManager->remove($deleteAmis);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_getRelations');
     }
 
     #[Route('/ajouterRelation/{idAmis}', name: 'app_postRelation')]
@@ -111,133 +109,117 @@ class RelationsController extends AbstractController
     {
         $user = $this->getUser();
 
-        if(is_null($user)){
-            //Redirige sur la page d'inscription
+        if (is_null($user)) {
             return $this->redirectToRoute('app_register');
         }
-        else{
-            $userId = $user->getId();
 
-            if(is_null($userId)){
-                //TODO: rediriger sur la page d'erreur
-                throw new Exception('Erreur lors de la récupération de votre compte');
-            }
+        $userId = $user->getId();
 
-            $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
-            
-            $newFriend = $entityManager->getRepository(User::class)->findOneBy(['id' => $idAmis]);
-            $addAmis = new Amis();
-            $addAmis->setIdUtilisateur($currentUser);
-            $addAmis->setIdUtilisateurAmi($newFriend);
-
-            //Ajout de la relation
-            $entityManager->persist($addAmis);
-            $entityManager->flush();
-            
-            //TODO: Changer la redirection vers le profil de l'utilisateur ajouté
-            return $this->redirectToRoute('app_getRelations');
+        if (is_null($userId)) {
+            throw new Exception(self::ERROR_MESSAGE);
         }
+
+        $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
+
+        $newFriend = $entityManager->getRepository(User::class)->findOneBy(['id' => $idAmis]);
+        $addAmis = new Amis();
+        $addAmis->setIdUtilisateur($currentUser);
+        $addAmis->setIdUtilisateurAmi($newFriend);
+
+        $entityManager->persist($addAmis);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_getRelations');
     }
-    
+
     //----- Api -----//
 
     #[Route('/api/relations/{userId}', name: 'app_api_getRelations', methods: ['GET'])]
     public function getRelationsApi(EntityManagerInterface $entityManager, int $userId): Response
     {
+        $response = null;
+
         if (is_null($userId)) {
-            return new JsonResponse(['message' => 'Erreur lors de la récupération de votre compte'], Response::HTTP_NOT_FOUND);
-        }
-        else
-        {
+            $response = new JsonResponse(['message' => self::ERROR_MESSAGE], Response::HTTP_NOT_FOUND);
+        } else {
             $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
-            if(is_null($currentUser)){
-                return new JsonResponse(['message' => 'Erreur lors de la récupération de votre compte'], Response::HTTP_NOT_FOUND);
+
+            if (is_null($currentUser)) {
+                $response = new JsonResponse(['message' => self::ERROR_MESSAGE], Response::HTTP_NOT_FOUND);
+            } else {
+                $amis = $this->amisRepository->findFriendsByUserId($userId);
+
+                if (is_null($amis)) {
+                    $response = new JsonResponse(['message' => 'Ajoutez des personnes à vos relations!'], Response::HTTP_NOT_FOUND);
+                } else {
+                    $tableau = [];
+
+                    foreach ($amis as $ami) {
+                        $amiId = $ami->getIdUtilisateurAmi()->getId();
+
+                        if ($amiId == $userId) {
+                            $tableau[] = [
+                                'idUtilisateur' => $ami->getIdUtilisateurAmi()->getId(),
+                                'photo' => $ami->getIdUtilisateur()->getPhoto(),
+                                'idAmi' => $ami->getIdUtilisateur()->getId(),
+                                'nom' => $ami->getIdUtilisateur()->getNom(),
+                                'description' => $ami->getIdUtilisateur()->getDescription()
+                            ];
+                        } else {
+                            $tableau[] = [
+                                'idUtilisateur' => $ami->getIdUtilisateur()->getId(),
+                                'photo' => $ami->getIdUtilisateurAmi()->getPhoto(),
+                                'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
+                                'nom' => $ami->getIdUtilisateurAmi()->getNom(),
+                                'description' => $ami->getIdUtilisateurAmi()->getDescription()
+                            ];
+                        }
+                    }
+
+                    $response = new JsonResponse($tableau, 200, ['Access-Control-Allow-Origin' => '*']);
+                }
             }
         }
 
-        $amis = $this->amisRepository->findFriendsByUserId($userId);
+        return $response;
+}
 
-        if(is_null($amis)){
-            return new JsonResponse(['message' => 'Ajoutez des personnes à vos relations!'], Response::HTTP_NOT_FOUND);
-        }
-
-        $tableau = [];
-        foreach ($amis as $ami) {
-            $amiId = $ami->getIdUtilisateurAmi()->getId();
-            if($amiId == $userId){
-                $tableau[] = [
-                    'idUtilisateur' => $ami->getIdUtilisateurAmi()->getId(),
-                    'photo' => $ami->getIdUtilisateur()->getPhoto(),
-                    'idAmi' => $ami->getIdUtilisateur()->getId(),
-                    'nom' => $ami->getIdUtilisateur()->getNom(),
-                    'description' => $ami->getIdUtilisateur()->getDescription()
-                ];
-            }
-            else
-            {
-                $tableau[] = [
-                    'idUtilisateur' => $ami->getIdUtilisateur()->getId(),
-                    'photo' => $ami->getIdUtilisateurAmi()->getPhoto(),
-                    'idAmi' => $ami->getIdUtilisateurAmi()->getId(),
-                    'nom' => $ami->getIdUtilisateurAmi()->getNom(),
-                    'description' => $ami->getIdUtilisateurAmi()->getDescription()
-                ];
-            }
-        }
-
-        return new JsonResponse($tableau, 200, ['Access-Control-Allow-Origin' => '*']);
-    }
 
     #[Route('/api/relations/{userId}/ami/{idAmi}', name: 'app_api_deleteRelations', methods: ['DELETE'])]
     public function deleteRelationsApi(EntityManagerInterface $entityManager, int $userId, int $idAmi): Response
     {
-        if (is_null($userId)) {
-            return new Response('', Response::HTTP_NOT_FOUND);
-        }
-        else
-        {
+        $response = new Response('', Response::HTTP_NOT_FOUND);
+
+        if (!is_null($userId)) {
             $currentUser = $entityManager->getRepository(User::class)->findOneBy(['id' => $userId]);
-            if(is_null($currentUser)){
-                return new Response('', Response::HTTP_NOT_FOUND);
+
+            if ($currentUser) {
+                $amis = $this->amisRepository->findFriendsByUserId($userId);
+
+                if ($amis) {
+                    $deleteAmis = $entityManager->getRepository(Amis::class)
+                        ->findOneBy([
+                            'idUtilisateur' => $userId,
+                            'idUtilisateurAmi' => $idAmi
+                        ]);
+
+                    if (!$deleteAmis) {
+                        $deleteAmis = $entityManager->getRepository(Amis::class)
+                            ->findOneBy([
+                                'idUtilisateur' => $idAmi,
+                                'idUtilisateurAmi' => $userId
+                            ]);
+                    }
+
+                    if ($deleteAmis) {
+                        $entityManager->remove($deleteAmis);
+                        $entityManager->flush();
+                        $response = new Response('', Response::HTTP_OK);
+                    }
+                }
             }
         }
 
-        $amis = $this->amisRepository->findFriendsByUserId($userId);
-
-        if(is_null($amis)){
-            return new Response('', Response::HTTP_NOT_FOUND);
-        }
-        
-        $deleteAmis = $entityManager->getRepository(Amis::class)
-        ->findOneBy([
-            'idUtilisateur' => $userId,
-            'idUtilisateurAmi' => $idAmi
-        ]);
-
-        if ($deleteAmis) {
-            $entityManager->remove($deleteAmis);
-            $entityManager->flush();
-
-            return new Response('', Response::HTTP_OK);
-        }
-        else
-        {
-            $deleteAmis = $entityManager->getRepository(Amis::class)
-            ->findOneBy([
-                'idUtilisateur' => $idAmi,
-                'idUtilisateurAmi' => $userId
-            ]);
-
-            if ($deleteAmis) {
-                $entityManager->remove($deleteAmis);
-                $entityManager->flush();
-
-                return new Response('', Response::HTTP_OK);
-            }
-            else
-            {
-                return new Response('', Response::HTTP_NOT_FOUND);
-            }
-        }
+        return $response;
     }
 }
