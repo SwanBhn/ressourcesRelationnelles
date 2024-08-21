@@ -44,6 +44,7 @@ jobs:
           scan-ref: '.'
           trivy-config: trivy.yaml
   sonarcloud:
+    needs: tests
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
