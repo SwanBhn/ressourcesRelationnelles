@@ -132,47 +132,70 @@ class RelationsController extends AbstractController
     #[Route('/api/relations/{userId}', name: 'app_api_getRelations', methods: ['GET'])]
     public function getRelationsApi(EntityManagerInterface $entityManager, int $userId): Response
     {
-        // Default response and status
-        $response = new JsonResponse([], Response::HTTP_OK);
+        // Initialize default values
         $status = Response::HTTP_OK;
         $message = '';
-    
+        $data = [];
+
         // Check for invalid user ID
-        if (is_null($userId)) {
+        if (!$this->isValidUserId($userId)) {
             $status = Response::HTTP_NOT_FOUND;
             $message = self::ERROR_MESSAGE;
         } else {
-            $currentUser = $entityManager->getRepository(User::class)->find($userId);
-    
-            if (is_null($currentUser)) {
+            $currentUser = $this->getCurrentUser($entityManager, $userId);
+
+            if (!$currentUser) {
                 $status = Response::HTTP_NOT_FOUND;
                 $message = self::ERROR_MESSAGE;
             } else {
-                $amis = $this->amisRepository->findFriendsByUserId($userId);
-    
-                if (is_null($amis) || count($amis) === 0) {
+                $amis = $this->getFriends($userId);
+
+                if (empty($amis)) {
                     $status = Response::HTTP_NOT_FOUND;
                     $message = 'Ajoutez des personnes à vos relations!';
                 } else {
-                    $tableau = array_map(function($ami) use ($userId) {
-                        $isCurrentUserFriend = $ami->getIdUtilisateurAmi()->getId() == $userId;
-                        
-                        return [
-                            'idUtilisateur' => $isCurrentUserFriend ? $ami->getIdUtilisateurAmi()->getId() : $ami->getIdUtilisateur()->getId(),
-                            'photo' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getPhoto() : $ami->getIdUtilisateurAmi()->getPhoto(),
-                            'idAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getId() : $ami->getIdUtilisateurAmi()->getId(),
-                            'nom' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getNom() : $ami->getIdUtilisateurAmi()->getNom(),
-                            'description' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getDescription() : $ami->getIdUtilisateurAmi()->getDescription(),
-                        ];
-                    }, $amis);
-    
-                    $response = new JsonResponse($tableau, $status, ['Access-Control-Allow-Origin' => '*']);
+                    $data = $this->formatFriendsData($amis, $userId);
                 }
             }
         }
-    
-        return new JsonResponse(['message' => $message], $status, ['Access-Control-Allow-Origin' => '*']);
+
+        return new JsonResponse(
+            $status === Response::HTTP_OK ? $data : ['message' => $message],
+            $status,
+            ['Access-Control-Allow-Origin' => '*']
+        );
     }
+
+    private function isValidUserId(?int $userId): bool
+    {
+        return !is_null($userId);
+    }
+
+    private function getCurrentUser(EntityManagerInterface $entityManager, int $userId): ?User
+    {
+        return $entityManager->getRepository(User::class)->find($userId);
+    }
+
+    private function getFriends(int $userId): array
+    {
+        return $this->amisRepository->findFriendsByUserId($userId) ?: [];
+    }
+
+    private function formatFriendsData(array $amis, int $userId): array
+    {
+        return array_map(function($ami) use ($userId) {
+            $isCurrentUserFriend = $ami->getIdUtilisateurAmi()->getId() == $userId;
+            
+            return [
+                'idUtilisateur' => $isCurrentUserFriend ? $ami->getIdUtilisateurAmi()->getId() : $ami->getIdUtilisateur()->getId(),
+                'photo' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getPhoto() : $ami->getIdUtilisateurAmi()->getPhoto(),
+                'idAmi' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getId() : $ami->getIdUtilisateurAmi()->getId(),
+                'nom' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getNom() : $ami->getIdUtilisateurAmi()->getNom(),
+                'description' => $isCurrentUserFriend ? $ami->getIdUtilisateur()->getDescription() : $ami->getIdUtilisateurAmi()->getDescription(),
+            ];
+        }, $amis);
+    }
+
     
 
     #[Route('/api/relations/{userId}/ami/{idAmi}', name: 'app_api_deleteRelations', methods: ['DELETE'])]
