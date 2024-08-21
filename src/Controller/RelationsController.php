@@ -201,23 +201,39 @@ class RelationsController extends AbstractController
     #[Route('/api/relations/{userId}/ami/{idAmi}', name: 'app_api_deleteRelations', methods: ['DELETE'])]
     public function deleteRelationsApi(EntityManagerInterface $entityManager, int $userId, int $idAmi): Response
     {
-        if (is_null($userId)) {
-            return new Response('', Response::HTTP_NOT_FOUND);
+        // Initialize default response status
+        $status = Response::HTTP_OK;
+        $message = '';
+    
+        // Check for valid userId
+        if (is_null($userId) || !$this->isUserExists($entityManager, $userId)) {
+            $status = Response::HTTP_NOT_FOUND;
+            $message = 'User not found.';
+        } else {
+            // Check for existing friendship
+            $deleteAmis = $this->findFriendshipToDelete($entityManager, $userId, $idAmi);
+    
+            if ($deleteAmis) {
+                $entityManager->remove($deleteAmis);
+                $entityManager->flush();
+            } else {
+                $status = Response::HTTP_NOT_FOUND;
+                $message = 'Friendship not found.';
+            }
         }
-
-        $currentUser = $entityManager->getRepository(User::class)->find($userId);
-
-        if (!$currentUser) {
-            return new Response('', Response::HTTP_NOT_FOUND);
-        }
-
-        $amis = $this->amisRepository->findFriendsByUserId($userId);
-
-        if (!$amis) {
-            return new Response('', Response::HTTP_NOT_FOUND);
-        }
-
-        $deleteAmis = $entityManager->getRepository(Amis::class)
+    
+        // Return response with appropriate status and message
+        return new Response($message, $status);
+    }
+    
+    private function isUserExists(EntityManagerInterface $entityManager, int $userId): bool
+    {
+        return $entityManager->getRepository(User::class)->find($userId) !== null;
+    }
+    
+    private function findFriendshipToDelete(EntityManagerInterface $entityManager, int $userId, int $idAmi): ?Amis
+    {
+        return $entityManager->getRepository(Amis::class)
             ->findOneBy([
                 'idUtilisateur' => $userId,
                 'idUtilisateurAmi' => $idAmi
@@ -226,13 +242,5 @@ class RelationsController extends AbstractController
                     'idUtilisateur' => $idAmi,
                     'idUtilisateurAmi' => $userId
                 ]);
-
-        if ($deleteAmis) {
-            $entityManager->remove($deleteAmis);
-            $entityManager->flush();
-            return new Response('', Response::HTTP_OK);
-        }
-
-        return new Response('', Response::HTTP_NOT_FOUND);
-    }
+    }    
 }
