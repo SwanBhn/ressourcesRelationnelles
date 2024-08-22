@@ -4,9 +4,45 @@ on:
   push:
     branches:
     - master
+    - feature/*
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  tests:
+    name: Tests
+
+    runs-on: ubuntu-latest
+      
+    services:
+      mysql:
+        image: mysql:8.2
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 1
+          MYSQL_DATABASE: ressources-relationnelles_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        
+      - name: Setup PHP with Xdebug
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: xdebug
+
+      - name: Install dependencies with composer
+        run: composer update --no-ansi --no-interaction --no-progress
+        
+      - name: MigrationDBTest
+        run: php bin/console doctrine:migrations:migrate --env=test
+        
+      - name: Run tests with phpunit/phpunit
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
   trivy:
     name: Trivy
     runs-on: ubuntu-20.04
@@ -21,6 +57,7 @@ jobs:
           scan-ref: '.'
           trivy-config: trivy.yaml
   sonarcloud:
+    needs: tests
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
