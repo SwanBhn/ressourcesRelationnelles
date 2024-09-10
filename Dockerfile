@@ -3,10 +3,10 @@ FROM php:8.2-cli
 
 # Étape 2 : Installe les dépendances système et les extensions PHP nécessaires pour Symfony
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y unzip curl
+    && apt-get install -y unzip curl \
 
 # Étape 3 et 4 combinées : Installe Symfony CLI et Composer
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash \
     && apt-get install symfony-cli -y \
     && curl -sS https://getcomposer.org/installer -o composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
