@@ -42,7 +42,7 @@ jobs:
         run: php bin/console doctrine:migrations:migrate --env=test
         
       - name: Run tests with phpunit/phpunit
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: vendor/bin/phpunit --coverage-clover=.github\workflows\coverage.xml
   trivy:
     name: Trivy
     runs-on: ubuntu-20.04
