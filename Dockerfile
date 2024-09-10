@@ -9,7 +9,8 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get install symfony-cli -y \
     && curl -sS https://getcomposer.org/installer -o composer-setup.php \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && rm composer-setup.php
+    && rm composer-setup.php \
+    && docker-php-ext-install pdo_mysql
 
 # Étape 5 : Définit le répertoire de travail
 WORKDIR /app
