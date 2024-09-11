@@ -35,13 +35,17 @@ class RegistrationFormType extends AbstractType
                     'class' => 'form-control'
                 )
            ))
-            ->add('email', TextType::class, array(
-                'label' => false,
-                'attr' => array(
-                    'placeholder' => 'Email',
-                    'class' => 'form-control'
-                )
-           ))
+           ->add('email', EmailType::class, [
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Please enter a password',
+                ]),
+                new Regex([
+                    'pattern' => '/^([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)$/',
+                    'message' => 'Veuillez entrer un email valide.',
+                ]),
+            ],
+        ])  
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'Accepter les conditions d\'utilisation',
