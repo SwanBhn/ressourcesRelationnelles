@@ -36,12 +36,17 @@ jobs:
           coverage: xdebug
 
       - name: Install dependencies with composer
-        run: composer update --no-ansi --no-interaction --no-progress
-        
+        run: DATABASE_IP="127.0.0.1" composer update --no-ansi --no-interaction --no-progress
+      
+
       - name: MigrationDBTest
+        env:
+          DATABASE_IP: "127.0.0.1"
         run: php bin/console doctrine:migrations:migrate --env=test
         
       - name: Run tests with phpunit/phpunit
+        env:
+          DATABASE_IP: "127.0.0.1"
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
   trivy:
