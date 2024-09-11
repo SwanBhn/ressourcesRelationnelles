@@ -1,0 +1,40 @@
+
+services:
+  bdd_cesi1:
+    image: "mysql:8.2"
+    container_name: bdd_cesi1
+    hostname: bdd_cesi1
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql  # Volume persistant pour les données MySQL
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_DATABASE=ressources-relationnelles_test
+    networks:
+      - net-cesi1
+    expose : 
+      - "3306"
+
+  app-cesi1:
+    image: "ghcr.io/swanbhn/ressourcesrelationnelles:feature-Add-Dockerfile"
+    container_name: app_cesi1
+    hostname: app_cesi1
+    depends_on:
+      - bdd_cesi1
+    environment:
+      - DATABASE_IP=bdd_cesi1
+    networks:
+      - net-cesi1
+    ports:
+      - "8000:8000"  
+
+volumes:
+  mysql_data:
+    driver: local 
+
+networks:
+  net-cesi1:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.19.0.0/16"
