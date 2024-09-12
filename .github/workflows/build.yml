@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches:
-    - Production
+    - master
     - feature/*
   pull_request:
     types: [opened, synchronize, reopened]
