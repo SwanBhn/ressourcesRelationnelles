@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -36,15 +37,21 @@ class RegistrationFormType extends AbstractType
                 )
            ))
            ->add('email', EmailType::class, [
+            'attr' => [
+                'autocomplete' => 'new-mail',
+                'placeholder' => 'Email',
+                'class' => 'form-control'
+            ],
             'constraints' => [
                 new NotBlank([
-                    'message' => 'Please enter a password',
+                    'message' => 'Please enter a mail',
                 ]),
                 new Regex([
                     'pattern' => '/^([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)$/',
                     'message' => 'Veuillez entrer un email valide.',
                 ]),
             ],
+            'label' => false
         ])  
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
