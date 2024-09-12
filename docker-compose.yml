@@ -16,7 +16,7 @@ services:
       - "3306"
 
   app-cesi1:
-    image: "ghcr.io/swanbhn/ressourcesrelationnelles:feature-Add-Dockerfile"
+    image: "ghcr.io/swanbhn/ressourcesrelationnelles:Production"
     container_name: app_cesi1
     hostname: app_cesi1
     depends_on:
